@@ -1,0 +1,83 @@
+{
+  "profiles": [
+    {
+      "weight": 1,
+      "spells": {
+        "attack_spells": ["irons_spellbooks:magic_missile"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:summon_vex",
+        "attack_spells": ["irons_spellbooks:firecracker"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:fang_strike",
+        "single_use_spell": "irons_spellbooks:fang_ward",
+        "attack_spells": [],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "attack_spells": ["irons_spellbooks:blood_needles", "irons_spellbooks:acuponcture"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:ray_of_frost",
+        "attack_spells": ["irons_spellbooks:icicle"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "attack_spells": ["irons_spellbooks:electrocute"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:acid_split",
+        "barrage_spell": "irons_spellbooks:poison_spray",
+        "attack_spells": [],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:blaze_storm",
+        "attack_spells": ["irons_spellbooks:firebolt"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    }
+  ]
+}

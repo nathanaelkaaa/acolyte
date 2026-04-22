@@ -1,0 +1,499 @@
+package net.raptorzizi.acolyte.entity.mobs.wizards.human;
+
+import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
+import io.redspace.ironsspellbooks.api.util.Utils;
+import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
+import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.AbstractSpellCastingMob;
+import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.NeutralWizard;
+import io.redspace.ironsspellbooks.entity.mobs.goals.*;
+import io.redspace.ironsspellbooks.entity.mobs.goals.PatrolNearLocationGoal;
+import io.redspace.ironsspellbooks.entity.mobs.goals.WizardRecoverGoal;
+import io.redspace.ironsspellbooks.entity.mobs.wizards.priest.PriestEntity;
+import io.redspace.ironsspellbooks.registries.SoundRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.pathfinder.PathFinder;
+import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
+import net.raptorzizi.acolyte.AcolyteMod;
+import net.raptorzizi.acolyte.entity.goals.PatrolNearBlockPosGoal;
+import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeLoader;
+import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeProfile;
+import net.raptorzizi.acolyte.entity.goals.GenericStayGoal;
+import net.raptorzizi.acolyte.gui.RecruitMenu;
+
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Supplier;
+
+import static net.raptorzizi.acolyte.util.ModUtils.resolveBiomeFolder;
+
+public abstract class HumanEntity extends NeutralWizard implements IRecruitableCompanion, HomeOwner {
+
+    @Nullable private UUID ownerUUID;
+    private long contractEndTime = -1L;
+    private IRecruitableCompanion.CompanionOrder companionOrder =
+            IRecruitableCompanion.CompanionOrder.FOLLOW;
+
+    @Override public @Nullable UUID getOwnerUUID()           { return ownerUUID; }
+    @Override public void setOwnerUUID(@Nullable UUID uuid)  { this.ownerUUID = uuid; }
+    @Override public long getContractEndTime()               { return contractEndTime; }
+    @Override public void setContractEndTime(long time)      { this.contractEndTime = time; }
+    @Override public CompanionOrder getCurrentOrder()        { return companionOrder; }
+    @Nullable private BlockPos tavernCenter = null;
+    @Nullable private BlockPos homePos = null;
+
+    @Nullable protected ArchetypeProfile selectedProfile;
+
+    @Override
+    public void setCurrentOrder(CompanionOrder order) {
+        this.companionOrder = order;
+        refreshCompanionGoals();
+    }
+
+    public void setTavernCenter(BlockPos pos) {
+        this.tavernCenter = pos;
+    }
+
+    @Override
+    @Nullable
+    public BlockPos getHome() {
+        return homePos;
+    }
+
+    @Override
+    public void setHome(BlockPos pos) {
+        this.homePos = pos;
+    }
+
+
+    private final Supplier<Entity> ownerSupplier =
+            () -> ownerUUID != null ? this.level().getPlayerByUUID(ownerUUID) : null;
+
+    public static final ResourceLocation FALLBACK_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            AcolyteMod.MOD_ID, "textures/entity/generic_skin/plains/skin0.png"
+    );
+    private static final EntityDataAccessor<String> BIOME_FOLDER =
+            SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
+
+    private static final EntityDataAccessor<Integer> SKIN_VARIANT =
+            SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> CUSTOM_SKIN =
+            SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
+
+
+    public HumanEntity(EntityType<? extends AbstractSpellCastingMob> pEntityType, Level pLevel) {
+        super(pEntityType, pLevel);
+    }
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder pBuilder) {
+        super.defineSynchedData(pBuilder);
+        pBuilder.define(SKIN_VARIANT, 0);
+        pBuilder.define(CUSTOM_SKIN, "");
+        pBuilder.define(BIOME_FOLDER, "plains");
+    }
+
+    private void syncProfileToClient() {
+        if (selectedProfile != null && selectedProfile.customSkin != null) {
+            this.entityData.set(CUSTOM_SKIN, selectedProfile.customSkin.toString());
+        } else {
+            this.entityData.set(CUSTOM_SKIN, "");
+        }
+    }
+
+    public int getSkinVariant()       {
+        return this.entityData.get(SKIN_VARIANT);
+    }
+    public void setSkinVariant(int v) {
+        this.entityData.set(SKIN_VARIANT, v);
+    }
+    protected int getSkinCount()      { return 3; }
+
+    protected abstract String getArchetypeName();
+
+    public ResourceLocation getTextureLocation() {
+        String skinStr = this.entityData.get(CUSTOM_SKIN);
+        if (!skinStr.isEmpty()) {
+            return ResourceLocation.parse(skinStr);
+        }
+        String folder = this.entityData.get(BIOME_FOLDER);
+        return ResourceLocation.fromNamespaceAndPath(
+                AcolyteMod.MOD_ID,
+                "textures/entity/generic_skin/" + folder + "/skin" + getSkinVariant() + ".png"
+        );
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level pLevel) {
+        return new GroundPathNavigation(this, pLevel) {
+            @Override
+            protected PathFinder createPathFinder(int pMaxVisitedNodes) {
+                this.nodeEvaluator = new WalkNodeEvaluator();
+                this.nodeEvaluator.setCanPassDoors(true);
+                this.nodeEvaluator.setCanOpenDoors(true);
+                return new PathFinder(this.nodeEvaluator, pMaxVisitedNodes);
+            }
+        };
+    }
+
+    // Goals
+
+    @Override
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
+
+        if (selectedProfile != null) {
+            registerArchetypeGoals();
+        }
+
+        registerCompanionGoals();
+
+        if (!isRecruited()) {
+            this.goalSelector.addGoal(6, new RoamVillageGoal(this, 30, 1f));
+            this.goalSelector.addGoal(7, new ReturnToHomeAtNightGoal<>(this, 1f));
+        }
+
+        if (tavernCenter != null) {
+            this.goalSelector.addGoal(8, new PatrolNearBlockPosGoal(this, tavernCenter, 20, .75f));
+        } else {
+            this.goalSelector.addGoal(8, new PatrolNearLocationGoal(this, 30, .75f));
+        }
+
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(10, new WizardRecoverGoal(this));
+
+        registerTargetGoals();
+    }
+
+    private void registerTargetGoals() {
+        if (!isRecruited()) {
+            this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
+            this.targetSelector.addGoal(2, new GenericDefendVillageTargetGoal(this));
+            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isHostileTowards));
+            this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false,
+                    (mob) -> mob instanceof Enemy && !(mob instanceof Creeper)));
+            this.targetSelector.addGoal(5, new ResetUniversalAngerTargetGoal<>(this, false));
+        } else {
+            this.targetSelector.addGoal(1, new GenericOwnerHurtByTargetGoal(this, ownerSupplier));
+            this.targetSelector.addGoal(2, new GenericOwnerHurtTargetGoal(this, ownerSupplier));
+            this.targetSelector.addGoal(3, new GenericCopyOwnerTargetGoal(this, ownerSupplier));
+            this.targetSelector.addGoal(4, new GenericHurtByTargetGoal(this, entity -> isAlliedTo(entity)).setAlertOthers());
+            this.targetSelector.addGoal(5, new GenericProtectOwnerTargetGoal(this, ownerSupplier));
+        }
+    }
+
+    private void registerCompanionGoals() {
+        if (!isRecruited()) return;
+
+        if (companionOrder == CompanionOrder.FOLLOW) {
+            this.goalSelector.addGoal(5, new GenericFollowOwnerGoal(
+                    this, ownerSupplier, 1.2, 4f, 2f, false, 24f
+            ));
+        } else {
+            this.goalSelector.addGoal(5, new GenericStayGoal(this, ownerSupplier));
+        }
+    }
+
+    private void refreshCompanionGoals() {
+        this.goalSelector.removeAllGoals(g ->
+                g instanceof GenericFollowOwnerGoal  || g instanceof GenericStayGoal
+        );
+        this.targetSelector.removeAllGoals(g -> true);
+        registerCompanionGoals();
+        registerTargetGoals();
+    }
+
+    protected abstract void registerArchetypeGoals();
+
+    // Spawn
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty,
+                                        MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
+        RandomSource random = Utils.random;
+        this.setSkinVariant(random.nextInt(getSkinCount()));
+        this.selectedProfile = ArchetypeLoader.INSTANCE.rollProfile(
+                getArchetypeName(), new Random(random.nextLong())
+        );
+        applyProfileStats();
+        this.xpReward = selectedProfile != null ? selectedProfile.xpReward : 15;
+        syncProfileToClient();
+        if (tavernCenter != null) {
+            this.setHome(tavernCenter);
+        }
+
+        this.goalSelector.removeAllGoals(x -> true);
+        this.targetSelector.removeAllGoals(x -> true);
+        registerGoals();
+        this.populateDefaultEquipmentSlots(random, pDifficulty);
+
+        if (selectedProfile != null && selectedProfile.customName != null) {
+            this.setCustomName(Component.literal(selectedProfile.customName));
+        }
+
+        String folder = resolveBiomeFolder(pLevel, this.blockPosition());
+        this.entityData.set(BIOME_FOLDER, folder);
+
+        return super.finalizeSpawn(pLevel, pDifficulty, pReason, pSpawnData);
+    }
+
+    @Override
+    protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty) {
+        if (selectedProfile == null) return;
+        applySlot(EquipmentSlot.HEAD,     selectedProfile.head);
+        applySlot(EquipmentSlot.CHEST,    selectedProfile.chest);
+        applySlot(EquipmentSlot.LEGS,     selectedProfile.legs);
+        applySlot(EquipmentSlot.FEET,     selectedProfile.feet);
+        applySlot(EquipmentSlot.OFFHAND,  selectedProfile.offhand);
+        if (this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) {
+            applySlot(EquipmentSlot.MAINHAND, selectedProfile.mainhand);
+        }
+    }
+
+    protected void applySlot(EquipmentSlot slot, @Nullable Item item) {
+        if (item == null) return;
+        this.setItemSlot(slot, new ItemStack(item));
+        this.setDropChance(slot, 0.0F);
+    }
+
+    protected void applyProfileStats() {
+        if (selectedProfile == null || selectedProfile.statOverrides == null) return;
+
+        selectedProfile.statOverrides.forEach((key, value) -> {
+            var attribute = switch (key) {
+                case "max_health"       -> Attributes.MAX_HEALTH;
+                case "attack_damage"    -> Attributes.ATTACK_DAMAGE;
+                case "movement_speed"   -> Attributes.MOVEMENT_SPEED;
+                case "follow_range"     -> Attributes.FOLLOW_RANGE;
+                case "armor"            -> Attributes.ARMOR;
+                case "attack_knockback" -> Attributes.ATTACK_KNOCKBACK;
+                default -> null;
+            };
+            if (attribute != null) {
+                var instance = this.getAttribute(attribute);
+                if (instance != null) instance.setBaseValue(value);
+            }
+        });
+
+        if (selectedProfile.hasStatOverride("max_health")) {
+            this.setHealth(this.getMaxHealth());
+        }
+    }
+
+    public List<AbstractSpell> getAllProfileSpells() {
+        if (selectedProfile == null) return List.of();
+
+        List<AbstractSpell> spells = new ArrayList<>();
+
+        addSpellArray(spells, selectedProfile.attackSpells);
+        addSpellArray(spells, selectedProfile.defenseSpells);
+        addSpellArray(spells, selectedProfile.mobilitySpells);
+        addSpellArray(spells, selectedProfile.utilitySpells);
+        if (selectedProfile.barrageSpell   != null) spells.add(selectedProfile.barrageSpell);
+        if (selectedProfile.singleUseSpell != null) spells.add(selectedProfile.singleUseSpell);
+
+        return spells.stream().distinct().limit(8).toList();
+    }
+
+    private void addSpellArray(
+            List<AbstractSpell> target,
+            List<AbstractSpell> source) {
+        if (source != null)
+            for (var s : source) if (s != null) target.add(s);
+    }
+
+    // Interaction
+
+    @Override
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+        if (isRecruited() && !isOwnedBy(player)) {
+            return super.mobInteract(player, hand);
+        }
+        if (!this.level().isClientSide() && player instanceof ServerPlayer serverPlayer) {
+            openRecruitScreen(serverPlayer);
+            return InteractionResult.CONSUME;
+        }
+        return InteractionResult.sidedSuccess(this.level().isClientSide());
+    }
+
+    @Override
+    public void openRecruitScreen(ServerPlayer player) {
+        boolean isRecruited = this.isRecruited() && this.isOwnedBy(player);
+        float progress = isRecruited ? this.getContractProgress(this.level()) : 0f;
+        float hp    = this.getHealth();
+        float maxHp = (float) this.getAttributeValue(Attributes.MAX_HEALTH);
+        float atk   = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        float def   = (float) this.getAttributeValue(Attributes.ARMOR);
+        List<ResourceLocation> spellIds = this.getAllProfileSpells().stream()
+                .map(s -> s.getSpellResource()).toList();
+        String name = this.getDisplayName().getString();
+        int id = this.getId();
+
+        player.openMenu(new net.minecraft.world.MenuProvider() {
+            @Override
+            public net.minecraft.network.chat.Component getDisplayName() {
+                return net.minecraft.network.chat.Component.literal(name);
+            }
+
+            @Override
+            public net.minecraft.world.inventory.AbstractContainerMenu createMenu(
+                    int containerId, Inventory inventory, Player p) {
+                return new RecruitMenu(containerId, inventory,
+                        id, hp, maxHp, atk, def, isRecruited, progress, name, spellIds);
+            }
+        }, buf -> {
+            buf.writeInt(id);
+            buf.writeFloat(hp);
+            buf.writeFloat(maxHp);
+            buf.writeFloat(atk);
+            buf.writeFloat(def);
+            buf.writeBoolean(isRecruited);
+            buf.writeFloat(progress);
+            buf.writeUtf(name);
+            buf.writeInt(spellIds.size());
+            for (ResourceLocation rid : spellIds) buf.writeResourceLocation(rid);
+        });
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        tickContract(this.level());
+    }
+
+    @Override
+    public boolean isAlliedTo(Entity entity) {
+        if (super.isAlliedTo(entity)) return true;
+        if (!this.isRecruited()) return false;
+        if (entity instanceof Player player && this.ownerUUID != null
+                && this.ownerUUID.equals(player.getUUID())) return true;
+        if (entity instanceof HumanEntity other && other.isRecruited()) {
+            return other.ownerUUID != null && other.ownerUUID.equals(this.ownerUUID);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean hurt(net.minecraft.world.damagesource.DamageSource source, float amount) {
+        Entity direct = source.getDirectEntity();
+        Entity indirect = source.getEntity();
+        if (indirect instanceof HumanEntity) return false;
+        if (direct instanceof HumanEntity) return false;
+        if (indirect instanceof PriestEntity) return false;
+        if (direct instanceof PriestEntity) return false;
+
+        if (indirect != null && isAlliedTo(indirect)) return false;
+        if (direct != null && direct != indirect && isAlliedTo(direct)) return false;
+        return super.hurt(source, amount);
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        if (target instanceof HumanEntity) return;
+        if (target instanceof PriestEntity) return;
+        if (target != null && isAlliedTo(target)) return;
+        super.setTarget(target);
+    }
+
+    @Override
+    public void recruit(Player player, Level level) {
+        IRecruitableCompanion.super.recruit(player, level);
+        this.goalSelector.removeAllGoals(x -> true);
+        this.targetSelector.removeAllGoals(x -> true);
+        registerGoals();
+    }
+
+    @Override
+    public void onUnRecruit() {
+        if (!level().isClientSide) {
+            MagicManager.spawnParticles(level(), ParticleTypes.POOF, getX(), getY(), getZ(), 25, .4, .8, .4, .03, false);
+            setRemoved(RemovalReason.DISCARDED);
+        }
+    }
+
+    public void onContractExpired() {
+        IRecruitableCompanion.super.onContractExpired();
+        if (!level().isClientSide) {
+            MagicManager.spawnParticles(level(), ParticleTypes.POOF, getX(), getY(), getZ(), 25, .4, .8, .4, .03, false);
+            setRemoved(RemovalReason.DISCARDED);
+        }
+    }
+
+    @Override
+    public Optional<SoundEvent> getAngerSound() {
+        return Optional.of(SoundRegistry.TRADER_NO.get());
+    }
+
+    // Sérialisation
+
+    @Override
+    public void addAdditionalSaveData(CompoundTag pCompound) {
+        super.addAdditionalSaveData(pCompound);
+        serializeCompanion(pCompound);
+        pCompound.putInt("SkinVariant", this.getSkinVariant());
+        pCompound.putString("BiomeFolder", this.entityData.get(BIOME_FOLDER));
+        if (this.selectedProfile != null && this.selectedProfile.profileId != null) {
+            pCompound.putString("ArchetypeProfile", this.selectedProfile.profileId);
+        }
+
+        if (this.tavernCenter != null) {
+            pCompound.putInt("TavernX", tavernCenter.getX());
+            pCompound.putInt("TavernY", tavernCenter.getY());
+            pCompound.putInt("TavernZ", tavernCenter.getZ());
+        }
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag pCompound) {
+        super.readAdditionalSaveData(pCompound);
+        deserializeCompanion(pCompound);
+        this.setSkinVariant(pCompound.getInt("SkinVariant"));
+        if (pCompound.contains("BiomeFolder")) {
+            this.entityData.set(BIOME_FOLDER, pCompound.getString("BiomeFolder"));
+        }
+
+        if (pCompound.contains("ArchetypeProfile")) {
+            String profileId = pCompound.getString("ArchetypeProfile");
+            this.selectedProfile = ArchetypeLoader.INSTANCE.getProfileById(getArchetypeName(), profileId);
+            applyProfileStats();
+            syncProfileToClient();
+        }
+        if (pCompound.contains("TavernX")) {
+            this.tavernCenter = new BlockPos(
+                    pCompound.getInt("TavernX"),
+                    pCompound.getInt("TavernY"),
+                    pCompound.getInt("TavernZ")
+            );
+        }
+        this.goalSelector.removeAllGoals(x -> true);
+        this.targetSelector.removeAllGoals(x -> true);
+        registerGoals();
+    }
+}

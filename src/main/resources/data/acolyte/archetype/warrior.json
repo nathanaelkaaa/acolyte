@@ -1,0 +1,97 @@
+{
+  "profiles": [
+    {
+      "weight": 2
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:burning_dash"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:volt_strike"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:blood_step"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:frost_step"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:teleport"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:flaming_strike"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:blood_slash"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:gust"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:shockwave"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "barrage_spell": "irons_spellbooks:frostwave"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:echoing_strike"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:slow"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:evasion"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:oakskin"
+      }
+    },
+    {
+      "weight": 1,
+      "spells": {
+        "single_use_spell": "irons_spellbooks:spider_aspect"
+      }
+    }
+  ]
+}

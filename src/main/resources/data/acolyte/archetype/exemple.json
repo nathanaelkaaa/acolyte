@@ -1,0 +1,39 @@
+{
+  "profiles": [
+    {
+      "weight": 2,
+      "name": "Exemple",
+      "skin": "acolyte:textures/entity/exemple.png",
+      "equipment": {
+        "mainhand": "minecraft:air",
+        "offhand": "irons_spellbooks:air",
+        "head": "minecraft:iron_helmet",
+        "chest": "minecraft:iron_chestplate",
+        "legs": "minecraft:iron_leggings",
+        "feet": "minecraft:iron_boots"
+      },
+      "stats": {
+        "xp_reward": 8000,
+        "attack_damage": 3.0,
+        "attack_knockback": 1.0,
+        "max_health": 50.0,
+        "movement_speed": 0.25,
+        "follow_range": 24.0,
+        "armor": 2.0,
+        "attack_interval": 25,
+        "spells_quality": 0.4,
+        "barrage_attack_interval": 150,
+        "barrage_projectile_count": 4,
+        "single_use_spell_delay": 200
+      },
+      "spells": {
+        "single_use_spell": "irons_spellbooks:summon_vex",
+        "barrage_spell": "irons_spellbooks:gust",
+        "attack_spells": ["acolyte:zoltraak"],
+        "defense_spells": ["irons_spellbooks:mana_shield"],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    }
+  ]
+}
