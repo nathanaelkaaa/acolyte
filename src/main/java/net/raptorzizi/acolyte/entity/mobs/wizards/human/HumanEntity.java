@@ -25,6 +25,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -40,7 +41,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathFinder;
@@ -50,6 +50,7 @@ import net.raptorzizi.acolyte.entity.goals.PatrolNearBlockPosGoal;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeLoader;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeProfile;
 import net.raptorzizi.acolyte.entity.goals.GenericStayGoal;
+import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeUtils;
 import net.raptorzizi.acolyte.gui.RecruitMenu;
 
 import javax.annotation.Nullable;
@@ -61,57 +62,18 @@ import static net.raptorzizi.acolyte.util.ModUtils.resolveBiomeFolder;
 public abstract class HumanEntity extends NeutralWizard implements IRecruitableCompanion, HomeOwner {
 
     @Nullable private UUID ownerUUID;
-    private long contractEndTime = -1L;
-    private IRecruitableCompanion.CompanionOrder companionOrder =
-            IRecruitableCompanion.CompanionOrder.FOLLOW;
-
-    @Override public @Nullable UUID getOwnerUUID()           { return ownerUUID; }
-    @Override public void setOwnerUUID(@Nullable UUID uuid)  { this.ownerUUID = uuid; }
-    @Override public long getContractEndTime()               { return contractEndTime; }
-    @Override public void setContractEndTime(long time)      { this.contractEndTime = time; }
-    @Override public CompanionOrder getCurrentOrder()        { return companionOrder; }
-    @Nullable private BlockPos tavernCenter = null;
-    @Nullable private BlockPos homePos = null;
-    private final Map<Holder<Attribute>, Double> baseAttributeValues = new HashMap<>();
+    public static final ResourceLocation FALLBACK_TEXTURE = ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "textures/entity/generic_skin/plains/skin0.png");
+    private static final EntityDataAccessor<String> BIOME_FOLDER = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> SKIN_VARIANT = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<String> CUSTOM_SKIN = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
 
     @Nullable protected ArchetypeProfile selectedProfile;
-
-    @Override
-    public void setCurrentOrder(CompanionOrder order) {
-        this.companionOrder = order;
-        refreshCompanionGoals();
-    }
-
-    public void setTavernCenter(BlockPos pos) {
-        this.tavernCenter = pos;
-    }
-
-    @Override
-    @Nullable
-    public BlockPos getHome() {
-        return homePos;
-    }
-
-    @Override
-    public void setHome(BlockPos pos) {
-        this.homePos = pos;
-    }
-
-
-    private final Supplier<Entity> ownerSupplier =
-            () -> ownerUUID != null ? this.level().getPlayerByUUID(ownerUUID) : null;
-
-    public static final ResourceLocation FALLBACK_TEXTURE = ResourceLocation.fromNamespaceAndPath(
-            AcolyteMod.MOD_ID, "textures/entity/generic_skin/plains/skin0.png"
-    );
-    private static final EntityDataAccessor<String> BIOME_FOLDER =
-            SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
-
-    private static final EntityDataAccessor<Integer> SKIN_VARIANT =
-            SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<String> CUSTOM_SKIN =
-            SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
-
+    private final Map<Holder<Attribute>, Double> baseAttributeValues = new HashMap<>();
+    private long contractEndTime = -1L;
+    private IRecruitableCompanion.CompanionOrder companionOrder = IRecruitableCompanion.CompanionOrder.FOLLOW;
+    @Nullable private BlockPos tavernCenter = null;
+    @Nullable private BlockPos homePos = null;
+    private final Supplier<Entity> ownerSupplier = () -> ownerUUID != null ? this.level().getPlayerByUUID(ownerUUID) : null;
 
     public HumanEntity(EntityType<? extends AbstractSpellCastingMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -125,11 +87,7 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     }
 
     private void syncProfileToClient() {
-        if (selectedProfile != null && selectedProfile.customSkin != null) {
-            this.entityData.set(CUSTOM_SKIN, selectedProfile.customSkin.toString());
-        } else {
-            this.entityData.set(CUSTOM_SKIN, "");
-        }
+        ArchetypeUtils.syncProfileToClient(this.entityData, CUSTOM_SKIN, selectedProfile);
     }
 
     public int getSkinVariant()       {
@@ -139,33 +97,7 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         this.entityData.set(SKIN_VARIANT, v);
     }
     protected int getSkinCount()      { return 3; }
-
     protected abstract String getArchetypeName();
-
-    public ResourceLocation getTextureLocation() {
-        String skinStr = this.entityData.get(CUSTOM_SKIN);
-        if (!skinStr.isEmpty()) {
-            return ResourceLocation.parse(skinStr);
-        }
-        String folder = this.entityData.get(BIOME_FOLDER);
-        return ResourceLocation.fromNamespaceAndPath(
-                AcolyteMod.MOD_ID,
-                "textures/entity/generic_skin/" + folder + "/skin" + getSkinVariant() + ".png"
-        );
-    }
-
-    @Override
-    protected PathNavigation createNavigation(Level pLevel) {
-        return new GroundPathNavigation(this, pLevel) {
-            @Override
-            protected PathFinder createPathFinder(int pMaxVisitedNodes) {
-                this.nodeEvaluator = new WalkNodeEvaluator();
-                this.nodeEvaluator.setCanPassDoors(true);
-                this.nodeEvaluator.setCanOpenDoors(true);
-                return new PathFinder(this.nodeEvaluator, pMaxVisitedNodes);
-            }
-        };
-    }
 
     // Goals
 
@@ -238,6 +170,7 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     protected abstract void registerArchetypeGoals();
 
     // Spawn
+
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty,
                                         MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
@@ -280,95 +213,64 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         applySlot(EquipmentSlot.CHEST,    selectedProfile.chest);
         applySlot(EquipmentSlot.LEGS,     selectedProfile.legs);
         applySlot(EquipmentSlot.FEET,     selectedProfile.feet);
-        applySlot(EquipmentSlot.OFFHAND,  selectedProfile.offhand);
         if (this.getItemBySlot(EquipmentSlot.MAINHAND).isEmpty()) {
             applySlot(EquipmentSlot.MAINHAND, selectedProfile.mainhand);
         }
     }
 
     protected void applySlot(EquipmentSlot slot, @Nullable Item item) {
-        if (item == null) {
-            this.setItemSlot(slot, ItemStack.EMPTY);
-            return;
-        }
-        this.setItemSlot(slot, new ItemStack(item));
-        this.setDropChance(slot, 0.0F);
+        ArchetypeUtils.applySlot(this, slot, item);
     }
 
     private void captureBaseAttributes() {
-        for (Holder<Attribute> attr : List.of(
-                Attributes.MAX_HEALTH,
-                Attributes.ATTACK_DAMAGE,
-                Attributes.MOVEMENT_SPEED,
-                Attributes.FOLLOW_RANGE,
-                Attributes.ARMOR,
-                Attributes.ATTACK_KNOCKBACK
-        )) {
-            var inst = this.getAttribute(attr);
-            if (inst != null) baseAttributeValues.put(attr, inst.getBaseValue());
-        }
-    }
-
-    private void resetAttr(Holder<Attribute> attr) {
-        var inst = this.getAttribute(attr);
-        Double base = baseAttributeValues.get(attr);
-        if (inst != null && base != null) inst.setBaseValue(base);
+        ArchetypeUtils.captureBaseAttributes(this, baseAttributeValues);
     }
 
     protected void applyProfileStats() {
-        resetAttr(Attributes.MAX_HEALTH);
-        resetAttr(Attributes.ATTACK_DAMAGE);
-        resetAttr(Attributes.MOVEMENT_SPEED);
-        resetAttr(Attributes.FOLLOW_RANGE);
-        resetAttr(Attributes.ARMOR);
-        resetAttr(Attributes.ATTACK_KNOCKBACK);
-
-        if (selectedProfile == null || selectedProfile.statOverrides == null) return;
-
-        selectedProfile.statOverrides.forEach((key, value) -> {
-            var attribute = switch (key) {
-                case "max_health"       -> Attributes.MAX_HEALTH;
-                case "attack_damage"    -> Attributes.ATTACK_DAMAGE;
-                case "movement_speed"   -> Attributes.MOVEMENT_SPEED;
-                case "follow_range"     -> Attributes.FOLLOW_RANGE;
-                case "armor"            -> Attributes.ARMOR;
-                case "attack_knockback" -> Attributes.ATTACK_KNOCKBACK;
-                default -> null;
-            };
-            if (attribute != null) {
-                var instance = this.getAttribute(attribute);
-                if (instance != null) instance.setBaseValue(value);
-            }
-        });
-
-        if (selectedProfile.hasStatOverride("max_health")) {
-            this.setHealth(this.getMaxHealth());
-        }
+        ArchetypeUtils.applyProfileStats(this, selectedProfile, baseAttributeValues);
     }
 
-    public List<AbstractSpell> getAllProfileSpells() {
-        if (selectedProfile == null) return List.of();
+    // Getter / Setter
 
-        List<AbstractSpell> spells = new ArrayList<>();
+    @Override public @Nullable UUID getOwnerUUID()           { return ownerUUID; }
+    @Override public void setOwnerUUID(@Nullable UUID uuid)  { this.ownerUUID = uuid; }
+    @Override public long getContractEndTime()               { return contractEndTime; }
+    @Override public void setContractEndTime(long time)      { this.contractEndTime = time; }
+    @Override public CompanionOrder getCurrentOrder()        { return companionOrder; }
 
-        addSpellArray(spells, selectedProfile.attackSpells);
-        addSpellArray(spells, selectedProfile.defenseSpells);
-        addSpellArray(spells, selectedProfile.mobilitySpells);
-        addSpellArray(spells, selectedProfile.utilitySpells);
-        if (selectedProfile.barrageSpell   != null) spells.add(selectedProfile.barrageSpell);
-        if (selectedProfile.singleUseSpell != null) spells.add(selectedProfile.singleUseSpell);
-
-        return spells.stream().distinct().limit(8).toList();
+    @Override
+    public void setCurrentOrder(CompanionOrder order) {
+        this.companionOrder = order;
+        refreshCompanionGoals();
     }
 
-    private void addSpellArray(
-            List<AbstractSpell> target,
-            List<AbstractSpell> source) {
-        if (source != null)
-            for (var s : source) if (s != null) target.add(s);
+    public void setTavernCenter(BlockPos pos) {
+        this.tavernCenter = pos;
     }
 
-    // Interaction
+    @Override
+    @Nullable
+    public BlockPos getHome() {
+        return homePos;
+    }
+
+    @Override
+    public void setHome(BlockPos pos) {
+        this.homePos = pos;
+    }
+
+    @Override
+    public boolean isLeftHanded() {
+        return false;
+    }
+
+    // Interaction / AI
+
+    @Override
+    public void tick() {
+        super.tick();
+        tickContract(this.level());
+    }
 
     @Override
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
@@ -383,48 +285,16 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     }
 
     @Override
-    public void openRecruitScreen(ServerPlayer player) {
-        boolean isRecruited = this.isRecruited() && this.isOwnedBy(player);
-        float progress = isRecruited ? this.getContractProgress(this.level()) : 0f;
-        float hp    = this.getHealth();
-        float maxHp = (float) this.getAttributeValue(Attributes.MAX_HEALTH);
-        float atk   = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float def   = (float) this.getAttributeValue(Attributes.ARMOR);
-        List<ResourceLocation> spellIds = this.getAllProfileSpells().stream()
-                .map(s -> s.getSpellResource()).toList();
-        String name = this.getDisplayName().getString();
-        int id = this.getId();
-
-        player.openMenu(new net.minecraft.world.MenuProvider() {
+    protected PathNavigation createNavigation(Level pLevel) {
+        return new GroundPathNavigation(this, pLevel) {
             @Override
-            public Component getDisplayName() {
-                return Component.literal(name);
+            protected PathFinder createPathFinder(int pMaxVisitedNodes) {
+                this.nodeEvaluator = new WalkNodeEvaluator();
+                this.nodeEvaluator.setCanPassDoors(true);
+                this.nodeEvaluator.setCanOpenDoors(true);
+                return new PathFinder(this.nodeEvaluator, pMaxVisitedNodes);
             }
-
-            @Override
-            public AbstractContainerMenu createMenu(
-                    int containerId, Inventory inventory, Player p) {
-                return new RecruitMenu(containerId, inventory,
-                        id, hp, maxHp, atk, def, isRecruited, progress, name, spellIds);
-            }
-        }, buf -> {
-            buf.writeInt(id);
-            buf.writeFloat(hp);
-            buf.writeFloat(maxHp);
-            buf.writeFloat(atk);
-            buf.writeFloat(def);
-            buf.writeBoolean(isRecruited);
-            buf.writeFloat(progress);
-            buf.writeUtf(name);
-            buf.writeInt(spellIds.size());
-            for (ResourceLocation rid : spellIds) buf.writeResourceLocation(rid);
-        });
-    }
-
-    @Override
-    public void tick() {
-        super.tick();
-        tickContract(this.level());
+        };
     }
 
     @Override
@@ -461,6 +331,47 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         super.setTarget(target);
     }
 
+    //Recruitment
+
+    @Override
+    public void openRecruitScreen(ServerPlayer player) {
+        boolean isRecruited = this.isRecruited() && this.isOwnedBy(player);
+        float progress = isRecruited ? this.getContractProgress(this.level()) : 0f;
+        float hp    = this.getHealth();
+        float maxHp = (float) this.getAttributeValue(Attributes.MAX_HEALTH);
+        float atk   = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
+        float def   = (float) this.getAttributeValue(Attributes.ARMOR);
+        List<ResourceLocation> spellIds = this.getAllProfileSpells().stream()
+                .map(s -> s.getSpellResource()).toList();
+        String name = this.getDisplayName().getString();
+        int id = this.getId();
+
+        player.openMenu(new MenuProvider() {
+            @Override
+            public Component getDisplayName() {
+                return Component.literal(name);
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(
+                    int containerId, Inventory inventory, Player p) {
+                return new RecruitMenu(containerId, inventory,
+                        id, hp, maxHp, atk, def, isRecruited, progress, name, spellIds);
+            }
+        }, buf -> {
+            buf.writeInt(id);
+            buf.writeFloat(hp);
+            buf.writeFloat(maxHp);
+            buf.writeFloat(atk);
+            buf.writeFloat(def);
+            buf.writeBoolean(isRecruited);
+            buf.writeFloat(progress);
+            buf.writeUtf(name);
+            buf.writeInt(spellIds.size());
+            for (ResourceLocation rid : spellIds) buf.writeResourceLocation(rid);
+        });
+    }
+
     @Override
     public void recruit(Player player, Level level) {
         IRecruitableCompanion.super.recruit(player, level);
@@ -485,9 +396,26 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         }
     }
 
-    @Override
-    public Optional<SoundEvent> getAngerSound() {
-        return Optional.of(SoundRegistry.TRADER_NO.get());
+    public List<AbstractSpell> getAllProfileSpells() {
+        if (selectedProfile == null) return List.of();
+
+        List<AbstractSpell> spells = new ArrayList<>();
+
+        addSpellArray(spells, selectedProfile.attackSpells);
+        addSpellArray(spells, selectedProfile.defenseSpells);
+        addSpellArray(spells, selectedProfile.mobilitySpells);
+        addSpellArray(spells, selectedProfile.utilitySpells);
+        if (selectedProfile.barrageSpell   != null) spells.add(selectedProfile.barrageSpell);
+        if (selectedProfile.singleUseSpell != null) spells.add(selectedProfile.singleUseSpell);
+
+        return spells.stream().distinct().limit(8).toList();
+    }
+
+    private void addSpellArray(
+            List<AbstractSpell> target,
+            List<AbstractSpell> source) {
+        if (source != null)
+            for (var s : source) if (s != null) target.add(s);
     }
 
     // Sérialisation
@@ -534,5 +462,16 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         this.goalSelector.removeAllGoals(x -> true);
         this.targetSelector.removeAllGoals(x -> true);
         registerGoals();
+    }
+
+    public ResourceLocation getTextureLocation() {
+        return ArchetypeUtils.getTextureLocation(
+                this.entityData, CUSTOM_SKIN, BIOME_FOLDER, SKIN_VARIANT, FALLBACK_TEXTURE
+        );
+    }
+
+    @Override
+    public Optional<SoundEvent> getAngerSound() {
+        return Optional.of(SoundRegistry.TRADER_NO.get());
     }
 }
