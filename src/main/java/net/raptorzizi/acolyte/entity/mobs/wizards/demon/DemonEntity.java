@@ -49,10 +49,11 @@ import static net.raptorzizi.acolyte.util.ModUtils.resolveBiomeFolder;
 public abstract class DemonEntity extends AbstractSpellCastingMob implements Enemy {
 
 
-    public static final ResourceLocation FALLBACK_TEXTURE = ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "textures/entity/generic_skin/plains/skin0.png");
+    public static final ResourceLocation FALLBACK_TEXTURE = ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "textures/entity/generic_skin/plains/human0.png");
     private static final EntityDataAccessor<String> BIOME_FOLDER = SynchedEntityData.defineId(DemonEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> SKIN_VARIANT = SynchedEntityData.defineId(DemonEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> CUSTOM_SKIN = SynchedEntityData.defineId(DemonEntity.class, EntityDataSerializers.STRING);
+    private static final String PREFIX = "demon";
 
     @Nullable
     protected ArchetypeProfile selectedProfile;
@@ -211,7 +212,7 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
 
     public ResourceLocation getTextureLocation() {
         return ArchetypeUtils.getTextureLocation(
-                this.entityData, CUSTOM_SKIN, BIOME_FOLDER, SKIN_VARIANT, FALLBACK_TEXTURE
+                this.entityData, CUSTOM_SKIN, BIOME_FOLDER, SKIN_VARIANT, PREFIX , FALLBACK_TEXTURE
         );
     }
 

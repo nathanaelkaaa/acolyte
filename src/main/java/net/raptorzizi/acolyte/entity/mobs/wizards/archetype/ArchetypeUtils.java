@@ -114,6 +114,7 @@ public class ArchetypeUtils {
             EntityDataAccessor<String> customSkinAccessor,
             EntityDataAccessor<String> biomeFolderAccessor,
             EntityDataAccessor<Integer> skinVariantAccessor,
+            String prefix,
             ResourceLocation fallback) {
 
         String skinStr = entityData.get(customSkinAccessor);
@@ -128,7 +129,7 @@ public class ArchetypeUtils {
         }
         return ResourceLocation.fromNamespaceAndPath(
                 AcolyteMod.MOD_ID,
-                "textures/entity/generic_skin/" + folder + "/skin" + variant + ".png"
+                "textures/entity/generic_skin/" + folder + "/"+ prefix + variant + ".png"
         );
     }
 }

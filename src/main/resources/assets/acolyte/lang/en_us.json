@@ -31,9 +31,9 @@
   "entity.acolyte.demon_warrior": "Demon Warrior",
   "entity.acolyte.demon_archer": "Demon Archer",
   "entity.acolyte.human": "Human",
-  "entity.acolyte.human_mage": "Human Mage",
-  "entity.acolyte.human_warrior": "Human Warrior",
-  "entity.acolyte.human_archer": "Human Archer",
+  "entity.acolyte.human_mage": "Mage",
+  "entity.acolyte.human_warrior": "Warrior",
+  "entity.acolyte.human_archer": "Archer",
 
   "gui.acolyte.recruit.contract_cost":"Contract cost :",
   "gui.acolyte.recruit.hired": "%s hired %s",
