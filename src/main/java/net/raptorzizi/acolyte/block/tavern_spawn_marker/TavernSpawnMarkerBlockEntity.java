@@ -45,7 +45,6 @@ public class TavernSpawnMarkerBlockEntity extends BlockEntity {
 
             HumanEntity human = HumanSpawner.spawnRandom(serverLevel, spawnPos);
             if (human == null) return;
-            human.setTavernCenter(pos);
 
             human.moveTo(
                     spawnPos.getX() + 0.5,

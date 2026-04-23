@@ -72,17 +72,6 @@ public record PacketConfirmRecruit(
                 return;
             }
 
-            // Order
-            if (pkt.orderOnly()) {
-                if (!companion.isOwnedBy(serverPlayer)) return;
-                companion.setCurrentOrder(
-                        pkt.stayOrder()
-                                ? IRecruitableCompanion.CompanionOrder.STAY
-                                : IRecruitableCompanion.CompanionOrder.FOLLOW
-                );
-                return;
-            }
-
             // Recruitment
             if (companion.isRecruited()) {
                 if (!companion.isOwnedBy(serverPlayer)) {

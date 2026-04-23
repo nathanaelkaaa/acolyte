@@ -10,7 +10,6 @@ import io.redspace.ironsspellbooks.entity.mobs.goals.PatrolNearLocationGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.WizardRecoverGoal;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.priest.PriestEntity;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -46,7 +45,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.raptorzizi.acolyte.AcolyteMod;
-import net.raptorzizi.acolyte.entity.goals.PatrolNearBlockPosGoal;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeLoader;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeProfile;
 import net.raptorzizi.acolyte.entity.goals.GenericStayGoal;
@@ -59,7 +57,7 @@ import java.util.function.Supplier;
 
 import static net.raptorzizi.acolyte.util.ModUtils.resolveBiomeFolder;
 
-public abstract class HumanEntity extends NeutralWizard implements IRecruitableCompanion, HomeOwner {
+public abstract class HumanEntity extends NeutralWizard implements IRecruitableCompanion {
 
     @Nullable private UUID ownerUUID;
     public static final ResourceLocation FALLBACK_TEXTURE = ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "textures/entity/generic_skin/plains/human0.png");
@@ -72,8 +70,6 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     private final Map<Holder<Attribute>, Double> baseAttributeValues = new HashMap<>();
     private long contractEndTime = -1L;
     private IRecruitableCompanion.CompanionOrder companionOrder = IRecruitableCompanion.CompanionOrder.FOLLOW;
-    @Nullable private BlockPos tavernCenter = null;
-    @Nullable private BlockPos homePos = null;
     private final Supplier<Entity> ownerSupplier = () -> ownerUUID != null ? this.level().getPlayerByUUID(ownerUUID) : null;
 
     public HumanEntity(EntityType<? extends AbstractSpellCastingMob> pEntityType, Level pLevel) {
@@ -115,15 +111,9 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
 
         if (!isRecruited()) {
             this.goalSelector.addGoal(6, new RoamVillageGoal(this, 30, 1f));
-            this.goalSelector.addGoal(7, new ReturnToHomeAtNightGoal<>(this, 1f));
         }
 
-        if (tavernCenter != null) {
-            this.goalSelector.addGoal(8, new PatrolNearBlockPosGoal(this, tavernCenter, 20, .75f));
-        } else {
-            this.goalSelector.addGoal(8, new PatrolNearLocationGoal(this, 30, .75f));
-        }
-
+        this.goalSelector.addGoal(8, new PatrolNearLocationGoal(this, 30, .75f));
         this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(10, new WizardRecoverGoal(this));
 
@@ -184,9 +174,6 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         applyProfileStats();
         this.xpReward = selectedProfile != null ? selectedProfile.xpReward : 15;
         syncProfileToClient();
-        if (tavernCenter != null) {
-            this.setHome(tavernCenter);
-        }
 
         this.goalSelector.removeAllGoals(x -> true);
         this.targetSelector.removeAllGoals(x -> true);
@@ -243,21 +230,6 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     public void setCurrentOrder(CompanionOrder order) {
         this.companionOrder = order;
         refreshCompanionGoals();
-    }
-
-    public void setTavernCenter(BlockPos pos) {
-        this.tavernCenter = pos;
-    }
-
-    @Override
-    @Nullable
-    public BlockPos getHome() {
-        return homePos;
-    }
-
-    @Override
-    public void setHome(BlockPos pos) {
-        this.homePos = pos;
     }
 
     @Override
@@ -458,12 +430,6 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         if (this.selectedProfile != null && this.selectedProfile.profileId != null) {
             pCompound.putString("ArchetypeProfile", this.selectedProfile.profileId);
         }
-
-        if (this.tavernCenter != null) {
-            pCompound.putInt("TavernX", tavernCenter.getX());
-            pCompound.putInt("TavernY", tavernCenter.getY());
-            pCompound.putInt("TavernZ", tavernCenter.getZ());
-        }
     }
 
     @Override
@@ -480,13 +446,6 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
             this.selectedProfile = ArchetypeLoader.INSTANCE.getProfileById(getArchetypeName(), profileId);
             applyProfileStats();
             syncProfileToClient();
-        }
-        if (pCompound.contains("TavernX")) {
-            this.tavernCenter = new BlockPos(
-                    pCompound.getInt("TavernX"),
-                    pCompound.getInt("TavernY"),
-                    pCompound.getInt("TavernZ")
-            );
         }
         this.goalSelector.removeAllGoals(x -> true);
         this.targetSelector.removeAllGoals(x -> true);
