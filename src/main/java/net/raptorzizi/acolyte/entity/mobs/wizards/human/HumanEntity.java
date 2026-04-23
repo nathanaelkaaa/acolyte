@@ -265,6 +265,28 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         return false;
     }
 
+    @Override
+    public int getRecruitCost() {
+        if (selectedProfile == null) return 1;
+
+        return switch (selectedProfile.tier) {
+            case 2 -> 12;
+            case 3 -> 15;
+            default -> 8;
+        };
+    }
+
+    @Override
+    public long getContractDurationTicks() {
+        if (selectedProfile == null) return 72000L;
+
+        return switch (selectedProfile.tier) {
+            case 2 -> 48000L; // 2 days
+            case 3 -> 72000L; // 3 days
+            default -> 24000L; // 1 days
+        };
+    }
+
     // Interaction / AI
 
     @Override
@@ -338,6 +360,9 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     public void openRecruitScreen(ServerPlayer player) {
         boolean isRecruited = this.isRecruited() && this.isOwnedBy(player);
         float progress = isRecruited ? this.getContractProgress(this.level()) : 0f;
+        long totalDuration = this.getContractDurationTicks();
+        long remaining = this.getRemainingContractTicks(this.level());
+        int cost = this.getRecruitCost();
         float hp    = this.getHealth();
         float maxHp = (float) this.getAttributeValue(Attributes.MAX_HEALTH);
         float atk   = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
@@ -357,7 +382,7 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
             public AbstractContainerMenu createMenu(
                     int containerId, Inventory inventory, Player p) {
                 return new RecruitMenu(containerId, inventory,
-                        id, hp, maxHp, atk, def, isRecruited, progress, name, spellIds);
+                        id, hp, maxHp, atk, def, isRecruited, progress, name, spellIds, cost, remaining, totalDuration);
             }
         }, buf -> {
             buf.writeInt(id);
@@ -370,6 +395,9 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
             buf.writeUtf(name);
             buf.writeInt(spellIds.size());
             for (ResourceLocation rid : spellIds) buf.writeResourceLocation(rid);
+            buf.writeInt(cost);
+            buf.writeLong(remaining);
+            buf.writeLong(totalDuration);
         });
     }
 

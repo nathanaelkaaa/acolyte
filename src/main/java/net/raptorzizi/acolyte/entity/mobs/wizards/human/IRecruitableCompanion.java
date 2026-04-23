@@ -12,10 +12,13 @@ import java.util.UUID;
 
 public interface IRecruitableCompanion {
 
-    int RECRUIT_COST = 1;
+    default int getRecruitCost() {
+        return 1;
+    }
 
-    //long CONTRACT_DURATION_TICKS = 72_000L;
-    long CONTRACT_DURATION_TICKS = 72_000L;
+    default long getContractDurationTicks() {
+        return 24000L; // Valeur par défaut (1 jour Minecraft)
+    }
 
     @Nullable
     UUID getOwnerUUID();
@@ -49,7 +52,7 @@ public interface IRecruitableCompanion {
 
     default float getContractProgress(Level level) {
         if (!hasActiveContract()) return 0f;
-        return (float) getRemainingContractTicks(level) / (float) CONTRACT_DURATION_TICKS;
+        return (float) getRemainingContractTicks(level) / (float) getContractDurationTicks();
     }
 
     default Component getDisplayName() {
@@ -80,7 +83,7 @@ public interface IRecruitableCompanion {
 
     default void recruit(Player player, Level level) {
         setOwnerUUID(player.getUUID());
-        setContractEndTime(level.getGameTime() + CONTRACT_DURATION_TICKS);
+        setContractEndTime(level.getGameTime() + getContractDurationTicks());
         setCurrentOrder(CompanionOrder.FOLLOW);
         onRecruited(player, asEntity().getDisplayName().getString());
     }

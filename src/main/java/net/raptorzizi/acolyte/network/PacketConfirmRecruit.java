@@ -1,6 +1,7 @@
 package net.raptorzizi.acolyte.network;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +14,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.IRecruitableCompanion;
-import net.raptorzizi.acolyte.gui.RecruitMenu;
 
 public record PacketConfirmRecruit(
         int entityId,
@@ -62,14 +62,17 @@ public record PacketConfirmRecruit(
 
             Entity entity = level.getEntity(pkt.entityId());
             if (!(entity instanceof HumanEntity human)) return;
-            if (!(human instanceof IRecruitableCompanion companion)) return;
 
+            IRecruitableCompanion companion = human;
+
+            // Unrecruit
             if (pkt.unrecruitOnly()) {
                 if (!companion.isOwnedBy(serverPlayer)) return;
                 companion.onUnRecruit();
                 return;
             }
 
+            // Order
             if (pkt.orderOnly()) {
                 if (!companion.isOwnedBy(serverPlayer)) return;
                 companion.setCurrentOrder(
@@ -80,21 +83,21 @@ public record PacketConfirmRecruit(
                 return;
             }
 
-            // Recrutement
-            if (companion.isRecruited() && !companion.isOwnedBy(serverPlayer)) {
-                serverPlayer.sendSystemMessage(
-                        net.minecraft.network.chat.Component.translatable(
-                                "gui.acolyte.recruit.already_hired")
-                );
+            // Recruitment
+            if (companion.isRecruited()) {
+                if (!companion.isOwnedBy(serverPlayer)) {
+                    serverPlayer.sendSystemMessage(
+                            Component.translatable("gui.acolyte.recruit.already_hired")
+                    );
+                }
                 return;
             }
 
-            if (companion.isOwnedBy(serverPlayer)) return;
+            int cost = companion.getRecruitCost();
 
-            int cost = RecruitMenu.RECRUIT_COST;
             if (!hasEnoughEmeralds(serverPlayer, cost)) {
                 serverPlayer.sendSystemMessage(
-                        net.minecraft.network.chat.Component.translatable(
+                        Component.translatable(
                                 "gui.acolyte.recruit.not_enough_emeralds", cost)
                 );
                 return;
@@ -119,7 +122,8 @@ public record PacketConfirmRecruit(
 
     private static void removeEmeralds(ServerPlayer player, int amount) {
         int remaining = amount;
-        for (ItemStack stack : player.getInventory().items) {
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            ItemStack stack = player.getInventory().getItem(i);
             if (remaining <= 0) break;
             if (stack.is(Items.EMERALD)) {
                 int toRemove = Math.min(remaining, stack.getCount());

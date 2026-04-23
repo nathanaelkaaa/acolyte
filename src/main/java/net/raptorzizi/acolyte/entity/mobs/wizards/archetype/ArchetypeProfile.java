@@ -15,6 +15,7 @@ import java.util.*;
 public class ArchetypeProfile {
 
     public final int weight;
+    public final int tier;
     public String profileId;
     @Nullable public final String customName;
     @Nullable public final ResourceLocation customSkin;
@@ -42,6 +43,7 @@ public class ArchetypeProfile {
 
     private ArchetypeProfile(
             int weight,
+            int tier,
             @Nullable String customName,
             @Nullable ResourceLocation customSkin,
             @Nullable Map<String, Double> statOverrides,
@@ -58,6 +60,7 @@ public class ArchetypeProfile {
             List<AbstractSpell> attack, List<AbstractSpell> defense,
             List<AbstractSpell> mobility, List<AbstractSpell> utility) {
         this.weight = weight;
+        this.tier = tier;
         this.customName = customName;
         this.customSkin = customSkin;
         this.statOverrides = statOverrides;
@@ -83,6 +86,7 @@ public class ArchetypeProfile {
 
     public static ArchetypeProfile fromJson(JsonObject json) {
         int weight = json.has("weight") ? json.get("weight").getAsInt() : 1;
+        int tier = json.has("tier") ? json.get("tier").getAsInt() : 1;
         String profileId = json.has("id") ? json.get("id").getAsString() : null;
         String customName = json.has("name") ? json.get("name").getAsString() : null;
 
@@ -126,6 +130,7 @@ public class ArchetypeProfile {
 
         ArchetypeProfile profile = new ArchetypeProfile(
                 weight,
+                tier,
                 customName,
                 customSkin,
                 statOverrides,

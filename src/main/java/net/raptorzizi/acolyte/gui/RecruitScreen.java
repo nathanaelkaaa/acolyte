@@ -171,9 +171,15 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
         guiGraphics.drawString(this.font,
                 Component.translatable("gui.acolyte.recruit.contract_duration"),
                 sx + 18, y + STAT_DURATION_Y + 1, COLOR_LABEL, false);
-        guiGraphics.drawString(this.font,
-                Component.translatable("gui.acolyte.recruit.contract_duration_value"),
-                sx + 18, y + STAT_DURATION_Y + 10, COLOR_VALUE, false);
+
+        String timeText;
+        if (menu.isRecruited) {
+            timeText = formatTicksToTime(menu.remainingTicks);
+        } else {
+            timeText = formatSimplifiedDuration(menu.totalDurationTicks);
+        }
+
+        guiGraphics.drawString(this.font, timeText, sx + 18, y + STAT_DURATION_Y + 10, COLOR_VALUE, false);
 
         guiGraphics.drawString(this.font,
                 Component.translatable("gui.acolyte.recruit.stat.spells"),
@@ -181,11 +187,28 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
 
     }
 
+    private String formatSimplifiedDuration(long ticks) {
+        int mcDays = (int) (ticks / 24000);
+
+        if (mcDays >= 1) {
+            return mcDays + " " + (mcDays > 1 ? "days" : "day");
+        } else {
+            return (ticks / 1200) + " mins";
+        }
+    }
+
+    private String formatTicksToTime(long ticks) {
+        long totalSeconds = ticks / 20;
+        long minutes = totalSeconds / 60;
+        long seconds = totalSeconds % 60;
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+
     private void renderHireCost(GuiGraphics guiGraphics) {
         int itemX = this.leftPos + 140;
         int itemY = this.topPos + 107;
 
-        ItemStack emerald = new ItemStack(Items.EMERALD, RecruitMenu.RECRUIT_COST);
+        ItemStack emerald = new ItemStack(Items.EMERALD, menu.recruitCost);
         guiGraphics.renderItem(emerald, itemX, itemY);
         guiGraphics.renderItemDecorations(this.font, emerald, itemX, itemY);
     }

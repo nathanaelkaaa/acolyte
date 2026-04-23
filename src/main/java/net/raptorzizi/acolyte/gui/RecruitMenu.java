@@ -24,13 +24,15 @@ public class RecruitMenu extends AbstractContainerMenu {
     public final float contractProgress;
     public final String displayName;
     public final List<ResourceLocation> spellIds;
-
-    public static final int RECRUIT_COST = IRecruitableCompanion.RECRUIT_COST;
+    public final int recruitCost;
+    public final long remainingTicks;
+    public final long totalDurationTicks;
 
     // Constructeur server
     public RecruitMenu(int containerId, Inventory playerInventory,
                        int entityId, float health, float maxHealth, float attackDamage, float armor,
-                       boolean isRecruited, float contractProgress, String displayName, List<ResourceLocation> spellIds) {
+                       boolean isRecruited, float contractProgress, String displayName, List<ResourceLocation> spellIds,
+                       int recruitCost, long remainingTicks, long totalDurationTicks) {
         super(ModMenuRegistry.RECRUIT_MENU.get(), containerId);
         this.entityId         = entityId;
         this.health           = health;
@@ -41,6 +43,9 @@ public class RecruitMenu extends AbstractContainerMenu {
         this.contractProgress = contractProgress;
         this.displayName      = displayName;
         this.spellIds = spellIds;
+        this.recruitCost      = recruitCost;
+        this.remainingTicks   = remainingTicks;
+        this.totalDurationTicks = totalDurationTicks;
         addPlayerInventory(playerInventory);
     }
 
@@ -59,6 +64,9 @@ public class RecruitMenu extends AbstractContainerMenu {
         List<ResourceLocation> ids = new ArrayList<>();
         for (int i = 0; i < count; i++) ids.add(buf.readResourceLocation());
         this.spellIds = ids;
+        this.recruitCost      = buf.readInt();
+        this.remainingTicks   = buf.readLong();
+        this.totalDurationTicks = buf.readLong();
         addPlayerInventory(playerInventory);
     }
 

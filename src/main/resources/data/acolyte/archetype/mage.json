@@ -2,6 +2,7 @@
   "profiles": [
     {
       "weight": 1,
+      "tier": 1,
       "spells": {
         "attack_spells": ["irons_spellbooks:magic_missile"],
         "defense_spells": [],
@@ -11,6 +12,37 @@
     },
     {
       "weight": 1,
+      "tier": 1,
+      "spells": {
+        "attack_spells": ["irons_spellbooks:icicle"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 1,
+      "spells": {
+        "attack_spells": ["irons_spellbooks:firecracker"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 1,
+      "spells": {
+        "attack_spells": ["irons_spellbooks:firebolt"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 2,
       "spells": {
         "single_use_spell": "irons_spellbooks:summon_vex",
         "attack_spells": ["irons_spellbooks:firecracker"],
@@ -21,6 +53,7 @@
     },
     {
       "weight": 1,
+      "tier": 2,
       "spells": {
         "barrage_spell": "irons_spellbooks:fang_strike",
         "single_use_spell": "irons_spellbooks:fang_ward",
@@ -32,7 +65,9 @@
     },
     {
       "weight": 1,
+      "tier": 2,
       "spells": {
+        "single_use_spell": "irons_spellbooks:ray_of_siphoning",
         "attack_spells": ["irons_spellbooks:blood_needles", "irons_spellbooks:acuponcture"],
         "defense_spells": [],
         "mobility_spells": [],
@@ -41,8 +76,9 @@
     },
     {
       "weight": 1,
+      "tier": 2,
       "spells": {
-        "single_use_spell": "irons_spellbooks:ray_of_frost",
+        "barrage_spell": "irons_spellbooks:ray_of_frost",
         "attack_spells": ["irons_spellbooks:icicle"],
         "defense_spells": [],
         "mobility_spells": [],
@@ -51,7 +87,9 @@
     },
     {
       "weight": 1,
+      "tier": 2,
       "spells": {
+        "barrage_spell": "irons_spellbooks:chain_lightning",
         "attack_spells": ["irons_spellbooks:electrocute"],
         "defense_spells": [],
         "mobility_spells": [],
@@ -60,23 +98,24 @@
     },
     {
       "weight": 1,
-      "name": "acid_split",
+      "tier": 2,
       "spells": {
         "barrage_spell": "irons_spellbooks:poison_breath",
         "single_use_spell": "irons_spellbooks:acid_orb",
         "attack_spells": [],
-        "defense_spells": [],
+        "defense_spells": ["irons_spellbooks:root"],
         "mobility_spells": [],
         "utility_spells": []
       }
     },
     {
       "weight": 1,
+      "tier": 2,
       "spells": {
         "barrage_spell": "irons_spellbooks:blaze_storm",
         "attack_spells": ["irons_spellbooks:firebolt"],
         "defense_spells": [],
-        "mobility_spells": [],
+        "mobility_spells": ["irons_spellbooks:heat_surge"],
         "utility_spells": []
       }
     }
