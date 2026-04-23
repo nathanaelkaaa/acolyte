@@ -11,6 +11,7 @@ import io.redspace.ironsspellbooks.entity.mobs.goals.WizardRecoverGoal;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.priest.PriestEntity;
 import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,6 +26,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -36,6 +38,7 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -69,6 +72,7 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     @Override public CompanionOrder getCurrentOrder()        { return companionOrder; }
     @Nullable private BlockPos tavernCenter = null;
     @Nullable private BlockPos homePos = null;
+    private final Map<Holder<Attribute>, Double> baseAttributeValues = new HashMap<>();
 
     @Nullable protected ArchetypeProfile selectedProfile;
 
@@ -237,6 +241,7 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty,
                                         MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
+        captureBaseAttributes();
         RandomSource random = Utils.random;
         this.setSkinVariant(random.nextInt(getSkinCount()));
         this.selectedProfile = ArchetypeLoader.INSTANCE.rollProfile(
@@ -256,6 +261,10 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
 
         if (selectedProfile != null && selectedProfile.customName != null) {
             this.setCustomName(Component.literal(selectedProfile.customName));
+            this.setCustomNameVisible(true);
+        } else {
+            this.setCustomName(null);
+            this.setCustomNameVisible(false);
         }
 
         String folder = resolveBiomeFolder(pLevel, this.blockPosition());
@@ -278,12 +287,42 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     }
 
     protected void applySlot(EquipmentSlot slot, @Nullable Item item) {
-        if (item == null) return;
+        if (item == null) {
+            this.setItemSlot(slot, ItemStack.EMPTY);
+            return;
+        }
         this.setItemSlot(slot, new ItemStack(item));
         this.setDropChance(slot, 0.0F);
     }
 
+    private void captureBaseAttributes() {
+        for (Holder<Attribute> attr : List.of(
+                Attributes.MAX_HEALTH,
+                Attributes.ATTACK_DAMAGE,
+                Attributes.MOVEMENT_SPEED,
+                Attributes.FOLLOW_RANGE,
+                Attributes.ARMOR,
+                Attributes.ATTACK_KNOCKBACK
+        )) {
+            var inst = this.getAttribute(attr);
+            if (inst != null) baseAttributeValues.put(attr, inst.getBaseValue());
+        }
+    }
+
+    private void resetAttr(Holder<Attribute> attr) {
+        var inst = this.getAttribute(attr);
+        Double base = baseAttributeValues.get(attr);
+        if (inst != null && base != null) inst.setBaseValue(base);
+    }
+
     protected void applyProfileStats() {
+        resetAttr(Attributes.MAX_HEALTH);
+        resetAttr(Attributes.ATTACK_DAMAGE);
+        resetAttr(Attributes.MOVEMENT_SPEED);
+        resetAttr(Attributes.FOLLOW_RANGE);
+        resetAttr(Attributes.ARMOR);
+        resetAttr(Attributes.ATTACK_KNOCKBACK);
+
         if (selectedProfile == null || selectedProfile.statOverrides == null) return;
 
         selectedProfile.statOverrides.forEach((key, value) -> {
@@ -358,12 +397,12 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
 
         player.openMenu(new net.minecraft.world.MenuProvider() {
             @Override
-            public net.minecraft.network.chat.Component getDisplayName() {
-                return net.minecraft.network.chat.Component.literal(name);
+            public Component getDisplayName() {
+                return Component.literal(name);
             }
 
             @Override
-            public net.minecraft.world.inventory.AbstractContainerMenu createMenu(
+            public AbstractContainerMenu createMenu(
                     int containerId, Inventory inventory, Player p) {
                 return new RecruitMenu(containerId, inventory,
                         id, hp, maxHp, atk, def, isRecruited, progress, name, spellIds);

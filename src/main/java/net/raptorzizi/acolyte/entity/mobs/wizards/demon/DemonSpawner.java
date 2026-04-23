@@ -10,9 +10,9 @@ public class DemonSpawner {
     public static DemonEntity spawnRandom(ServerLevel level, BlockPos pos) {
         int roll = level.random.nextInt(3);
         DemonEntity demon = switch (roll) {
-            case 0 -> ModEntityRegistry.DEMON_MAGE.get().create(level);
+            case 0 -> ModEntityRegistry.DEMON_ARCHER.get().create(level);
             case 1 -> ModEntityRegistry.DEMON_WARRIOR.get().create(level);
-            default -> ModEntityRegistry.DEMON_ARCHER.get().create(level);
+            default -> ModEntityRegistry.DEMON_MAGE.get().create(level);
         };
 
         if (demon == null) return null;

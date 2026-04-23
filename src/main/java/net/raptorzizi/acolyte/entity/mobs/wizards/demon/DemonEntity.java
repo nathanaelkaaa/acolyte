@@ -4,7 +4,9 @@ import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.AbstractSpellCastingMob;
 import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.NeutralWizard;
 import io.redspace.ironsspellbooks.entity.mobs.goals.*;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -15,6 +17,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
@@ -36,7 +39,9 @@ import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanEntity;
 import net.raptorzizi.acolyte.registries.ModItemsRegistry;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static net.raptorzizi.acolyte.util.ModUtils.resolveBiomeFolder;
@@ -53,6 +58,7 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
 
     @Nullable
     protected ArchetypeProfile selectedProfile;
+    private final Map<Holder<Attribute>, Double> baseAttributeValues = new HashMap<>();
 
     private static final EntityDataAccessor<Integer> SKIN_VARIANT =
             SynchedEntityData.defineId(DemonEntity.class, EntityDataSerializers.INT);
@@ -134,6 +140,7 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty,
                                         MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
+        captureBaseAttributes();
         RandomSource random = Utils.random;
         this.setSkinVariant(random.nextInt(getSkinCount()));
         this.selectedProfile = ArchetypeLoader.INSTANCE.rollProfile(
@@ -148,7 +155,11 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
         this.populateDefaultEquipmentSlots(random, pDifficulty);
 
         if (selectedProfile != null && selectedProfile.customName != null) {
-            this.setCustomName(net.minecraft.network.chat.Component.literal(selectedProfile.customName));
+            this.setCustomName(Component.literal(selectedProfile.customName));
+            this.setCustomNameVisible(true);
+        } else {
+            this.setCustomName(null);
+            this.setCustomNameVisible(false);
         }
 
         String folder = resolveBiomeFolder(pLevel, this.blockPosition());
@@ -178,12 +189,42 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
     }
 
     protected void applySlot(EquipmentSlot slot, @Nullable Item item) {
-        if (item == null) return;
+        if (item == null) {
+            this.setItemSlot(slot, ItemStack.EMPTY);
+            return;
+        }
         this.setItemSlot(slot, new ItemStack(item));
         this.setDropChance(slot, 0.0F);
     }
 
+    private void captureBaseAttributes() {
+        for (Holder<Attribute> attr : List.of(
+                Attributes.MAX_HEALTH,
+                Attributes.ATTACK_DAMAGE,
+                Attributes.MOVEMENT_SPEED,
+                Attributes.FOLLOW_RANGE,
+                Attributes.ARMOR,
+                Attributes.ATTACK_KNOCKBACK
+        )) {
+            var inst = this.getAttribute(attr);
+            if (inst != null) baseAttributeValues.put(attr, inst.getBaseValue());
+        }
+    }
+
+    private void resetAttr(Holder<Attribute> attr) {
+        var inst = this.getAttribute(attr);
+        Double base = baseAttributeValues.get(attr);
+        if (inst != null && base != null) inst.setBaseValue(base);
+    }
+
     protected void applyProfileStats() {
+        resetAttr(Attributes.MAX_HEALTH);
+        resetAttr(Attributes.ATTACK_DAMAGE);
+        resetAttr(Attributes.MOVEMENT_SPEED);
+        resetAttr(Attributes.FOLLOW_RANGE);
+        resetAttr(Attributes.ARMOR);
+        resetAttr(Attributes.ATTACK_KNOCKBACK);
+
         if (selectedProfile == null || selectedProfile.statOverrides == null) return;
 
         selectedProfile.statOverrides.forEach((key, value) -> {

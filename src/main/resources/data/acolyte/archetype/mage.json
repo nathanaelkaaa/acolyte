@@ -60,9 +60,10 @@
     },
     {
       "weight": 1,
+      "name": "acid_split",
       "spells": {
-        "single_use_spell": "irons_spellbooks:acid_split",
-        "barrage_spell": "irons_spellbooks:poison_spray",
+        "barrage_spell": "irons_spellbooks:poison_breath",
+        "single_use_spell": "irons_spellbooks:acid_orb",
         "attack_spells": [],
         "defense_spells": [],
         "mobility_spells": [],
