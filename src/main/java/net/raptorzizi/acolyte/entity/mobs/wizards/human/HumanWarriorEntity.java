@@ -117,8 +117,6 @@ public class HumanWarriorEntity extends HumanEntity implements IAnimatedAttacker
         meleeGoal.setMeleeMovespeedModifier(1.3f);
 
         this.goalSelector.addGoal(3, meleeGoal);
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
     }
 
     public static AttributeSupplier.Builder prepareAttributes() {

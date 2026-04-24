@@ -17,17 +17,21 @@ import net.raptorzizi.acolyte.entity.mobs.wizards.human.IRecruitableCompanion;
 
 public record PacketConfirmRecruit(
         int entityId,
-        boolean orderOnly,
-        boolean stayOrder,
-        boolean unrecruitOnly
+        boolean unrecruitOnly,
+        boolean hasOrder,
+        boolean orderStay
 ) implements CustomPacketPayload {
 
-    public PacketConfirmRecruit(int entityId, boolean orderOnly, boolean stayOrder) {
-        this(entityId, orderOnly, stayOrder, false);
+    public static PacketConfirmRecruit recruit(int entityId) {
+        return new PacketConfirmRecruit(entityId, false, false, false);
     }
 
     public static PacketConfirmRecruit unrecruit(int entityId) {
-        return new PacketConfirmRecruit(entityId, false, false, true);
+        return new PacketConfirmRecruit(entityId, true, false, false);
+    }
+
+    public static PacketConfirmRecruit order(int entityId, boolean stay) {
+        return new PacketConfirmRecruit(entityId, false, true, stay);
     }
 
     public static final Type<PacketConfirmRecruit> TYPE = new Type<>(
@@ -38,9 +42,9 @@ public record PacketConfirmRecruit(
             StreamCodec.of(
                     (buf, pkt) -> {
                         buf.writeInt(pkt.entityId());
-                        buf.writeBoolean(pkt.orderOnly());
-                        buf.writeBoolean(pkt.stayOrder());
                         buf.writeBoolean(pkt.unrecruitOnly());
+                        buf.writeBoolean(pkt.hasOrder());
+                        buf.writeBoolean(pkt.orderStay());
                     },
                     buf -> new PacketConfirmRecruit(
                             buf.readInt(),
@@ -72,7 +76,14 @@ public record PacketConfirmRecruit(
                 return;
             }
 
-            // Recruitment
+            // Ordre stay/follow
+            if (pkt.hasOrder()) {
+                if (!companion.isOwnedBy(serverPlayer)) return;
+                human.setOrderedToStay(pkt.orderStay());
+                return;
+            }
+
+            // Recrutement
             if (companion.isRecruited()) {
                 if (!companion.isOwnedBy(serverPlayer)) {
                     serverPlayer.sendSystemMessage(
@@ -86,8 +97,7 @@ public record PacketConfirmRecruit(
 
             if (!hasEnoughEmeralds(serverPlayer, cost)) {
                 serverPlayer.sendSystemMessage(
-                        Component.translatable(
-                                "gui.acolyte.recruit.not_enough_emeralds", cost)
+                        Component.translatable("gui.acolyte.recruit.not_enough_emeralds", cost)
                 );
                 return;
             }

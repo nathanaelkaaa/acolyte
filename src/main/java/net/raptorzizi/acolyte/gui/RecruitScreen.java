@@ -259,12 +259,12 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {}
 
     private void onRecruitClicked() {
-        NetworkHandler.sendToServer(new PacketConfirmRecruit(menu.entityId, false, false));
+        NetworkHandler.sendToServer(PacketConfirmRecruit.recruit(menu.entityId));
         this.onClose();
     }
 
     private void onOrderClicked(boolean stay) {
-        NetworkHandler.sendToServer(new PacketConfirmRecruit(menu.entityId, true, stay));
+        NetworkHandler.sendToServer(PacketConfirmRecruit.order(menu.entityId, stay));
         this.onClose();
     }
 

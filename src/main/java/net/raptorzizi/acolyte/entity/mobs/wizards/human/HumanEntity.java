@@ -4,12 +4,10 @@ import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.capabilities.magic.MagicManager;
 import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.AbstractSpellCastingMob;
-import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.NeutralWizard;
 import io.redspace.ironsspellbooks.entity.mobs.goals.*;
 import io.redspace.ironsspellbooks.entity.mobs.goals.PatrolNearLocationGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.WizardRecoverGoal;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.priest.PriestEntity;
-import io.redspace.ironsspellbooks.registries.SoundRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -18,20 +16,19 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.ResetUniversalAngerTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.*;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Creeper;
@@ -45,9 +42,9 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.pathfinder.PathFinder;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.raptorzizi.acolyte.AcolyteMod;
+import net.raptorzizi.acolyte.entity.goals.GenericStayOrderGoal;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeLoader;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeProfile;
-import net.raptorzizi.acolyte.entity.goals.GenericStayGoal;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeUtils;
 import net.raptorzizi.acolyte.gui.RecruitMenu;
 
@@ -57,7 +54,7 @@ import java.util.function.Supplier;
 
 import static net.raptorzizi.acolyte.util.ModUtils.resolveBiomeFolder;
 
-public abstract class HumanEntity extends NeutralWizard implements IRecruitableCompanion {
+public abstract class HumanEntity extends AbstractSpellCastingMob implements IRecruitableCompanion,NeutralMob {
 
     @Nullable private UUID ownerUUID;
     public static final ResourceLocation FALLBACK_TEXTURE = ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "textures/entity/generic_skin/plains/human0.png");
@@ -65,11 +62,19 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     private static final EntityDataAccessor<Integer> SKIN_VARIANT = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> CUSTOM_SKIN = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
     private static final String PREFIX = "human";
+    private static final int PERSISTENT_ANGER_TIME_MIN = 200;
+    private static final int PERSISTENT_ANGER_TIME_MAX = 400;
+    private boolean orderedToStay = false;
+
+    private static final EntityDataAccessor<Integer> DATA_REMAINING_ANGER_TIME =
+            SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
+
+    @Nullable
+    private UUID persistentAngerTarget;
 
     @Nullable protected ArchetypeProfile selectedProfile;
     private final Map<Holder<Attribute>, Double> baseAttributeValues = new HashMap<>();
     private long contractEndTime = -1L;
-    private IRecruitableCompanion.CompanionOrder companionOrder = IRecruitableCompanion.CompanionOrder.FOLLOW;
     private final Supplier<Entity> ownerSupplier = () -> ownerUUID != null ? this.level().getPlayerByUUID(ownerUUID) : null;
 
     public HumanEntity(EntityType<? extends AbstractSpellCastingMob> pEntityType, Level pLevel) {
@@ -81,6 +86,7 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         pBuilder.define(SKIN_VARIANT, 0);
         pBuilder.define(CUSTOM_SKIN, "");
         pBuilder.define(BIOME_FOLDER, "plains");
+        pBuilder.define(DATA_REMAINING_ANGER_TIME, 0);
     }
 
     private void syncProfileToClient() {
@@ -102,60 +108,29 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(0, new OpenDoorGoal(this, true));
+        this.goalSelector.addGoal(2, new GenericStayOrderGoal(this, ownerSupplier));
 
         if (selectedProfile != null) {
             registerArchetypeGoals();
         }
 
-        registerCompanionGoals();
+        this.goalSelector.addGoal(6, new GenericFollowOwnerGoal(this, this::getOwner, (double)1.4F, 10.0F, 3.0F, false, 20.0F));
+        this.goalSelector.addGoal(7, new PatrolNearLocationGoal(this, 30, .75f));
+        this.goalSelector.addGoal(8, new WizardRecoverGoal(this));
+        this.goalSelector.addGoal(9, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(10, new RandomLookAroundGoal(this));
 
-        if (!isRecruited()) {
-            this.goalSelector.addGoal(6, new RoamVillageGoal(this, 30, 1f));
-        }
+        this.targetSelector.addGoal(1, new GenericOwnerHurtByTargetGoal(this, ownerSupplier));
+        this.targetSelector.addGoal(2, new GenericOwnerHurtTargetGoal(this, ownerSupplier));
+        this.targetSelector.addGoal(3, new GenericCopyOwnerTargetGoal(this, ownerSupplier));
+        this.targetSelector.addGoal(4, new GenericHurtByTargetGoal(this, entity -> isAlliedTo(entity)).setAlertOthers());
+        this.targetSelector.addGoal(5, new GenericProtectOwnerTargetGoal(this, ownerSupplier));
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false,
+                (mob) -> !this.isRecruited()
+                        && mob instanceof Enemy
+                        && !(mob instanceof Creeper)));
 
-        this.goalSelector.addGoal(8, new PatrolNearLocationGoal(this, 30, .75f));
-        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(10, new WizardRecoverGoal(this));
-
-        registerTargetGoals();
-    }
-
-    private void registerTargetGoals() {
-        if (!isRecruited()) {
-            this.targetSelector.addGoal(1, new HurtByTargetGoal(this).setAlertOthers());
-            this.targetSelector.addGoal(2, new GenericDefendVillageTargetGoal(this));
-            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, this::isHostileTowards));
-            this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Mob.class, 5, false, false,
-                    (mob) -> mob instanceof Enemy && !(mob instanceof Creeper)));
-            this.targetSelector.addGoal(5, new ResetUniversalAngerTargetGoal<>(this, false));
-        } else {
-            this.targetSelector.addGoal(1, new GenericOwnerHurtByTargetGoal(this, ownerSupplier));
-            this.targetSelector.addGoal(2, new GenericOwnerHurtTargetGoal(this, ownerSupplier));
-            this.targetSelector.addGoal(3, new GenericCopyOwnerTargetGoal(this, ownerSupplier));
-            this.targetSelector.addGoal(4, new GenericHurtByTargetGoal(this, entity -> isAlliedTo(entity)).setAlertOthers());
-            this.targetSelector.addGoal(5, new GenericProtectOwnerTargetGoal(this, ownerSupplier));
-        }
-    }
-
-    private void registerCompanionGoals() {
-        if (!isRecruited()) return;
-
-        if (companionOrder == CompanionOrder.FOLLOW) {
-            this.goalSelector.addGoal(5, new GenericFollowOwnerGoal(
-                    this, ownerSupplier, 1.2, 4f, 2f, false, 24f
-            ));
-        } else {
-            this.goalSelector.addGoal(5, new GenericStayGoal(this, ownerSupplier));
-        }
-    }
-
-    private void refreshCompanionGoals() {
-        this.goalSelector.removeAllGoals(g ->
-                g instanceof GenericFollowOwnerGoal  || g instanceof GenericStayGoal
-        );
-        this.targetSelector.removeAllGoals(g -> true);
-        registerCompanionGoals();
-        registerTargetGoals();
     }
 
     protected abstract void registerArchetypeGoals();
@@ -224,12 +199,13 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     @Override public void setOwnerUUID(@Nullable UUID uuid)  { this.ownerUUID = uuid; }
     @Override public long getContractEndTime()               { return contractEndTime; }
     @Override public void setContractEndTime(long time)      { this.contractEndTime = time; }
-    @Override public CompanionOrder getCurrentOrder()        { return companionOrder; }
 
     @Override
-    public void setCurrentOrder(CompanionOrder order) {
-        this.companionOrder = order;
-        refreshCompanionGoals();
+    public boolean isOrderedToStay() { return orderedToStay; }
+
+    @Override
+    public void setOrderedToStay(boolean stay) {
+        this.orderedToStay = stay;
     }
 
     @Override
@@ -257,6 +233,29 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
             case 3 -> 72000L; // 3 days
             default -> 24000L; // 1 days
         };
+    }
+
+    public int getRemainingPersistentAngerTime() {
+        return this.entityData.get(DATA_REMAINING_ANGER_TIME);
+    }
+
+    public void setRemainingPersistentAngerTime(int time) {
+        this.entityData.set(DATA_REMAINING_ANGER_TIME, time);
+    }
+
+    public void startPersistentAngerTimer() {
+        int time = PERSISTENT_ANGER_TIME_MIN +
+                this.random.nextInt(PERSISTENT_ANGER_TIME_MAX - PERSISTENT_ANGER_TIME_MIN);
+        this.setRemainingPersistentAngerTime(time);
+    }
+
+    @Nullable
+    public UUID getPersistentAngerTarget() {
+        return this.persistentAngerTarget;
+    }
+
+    public void setPersistentAngerTarget(@Nullable UUID target) {
+        this.persistentAngerTarget = target;
     }
 
     // Interaction / AI
@@ -305,7 +304,7 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     }
 
     @Override
-    public boolean hurt(net.minecraft.world.damagesource.DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         Entity direct = source.getDirectEntity();
         Entity indirect = source.getEntity();
         if (indirect instanceof HumanEntity) return false;
@@ -376,9 +375,13 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
     @Override
     public void recruit(Player player, Level level) {
         IRecruitableCompanion.super.recruit(player, level);
-        this.goalSelector.removeAllGoals(x -> true);
-        this.targetSelector.removeAllGoals(x -> true);
-        registerGoals();
+        if (!level.isClientSide) {
+
+            this.setOwnerUUID(player.getUUID());
+
+            ((ServerLevel)level).sendParticles(ParticleTypes.HAPPY_VILLAGER,
+                    getX(), getY() + 1, getZ(), 10, 0.5, 0.5, 0.5, 0.05);
+        }
     }
 
     @Override
@@ -395,6 +398,23 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
             MagicManager.spawnParticles(level(), ParticleTypes.POOF, getX(), getY(), getZ(), 25, .4, .8, .4, .03, false);
             setRemoved(RemovalReason.DISCARDED);
         }
+    }
+
+
+    @Override
+    public void die(DamageSource pSource) {
+        if (!level().isClientSide && isRecruited()) {
+            Player owner = getOwner();
+            if (owner instanceof ServerPlayer sp) {
+                sp.sendSystemMessage(
+                        Component.translatable("gui.acolyte.recruit.companion_died",
+                                this.getDisplayName())
+                );
+            }
+            setOwnerUUID(null);
+            setContractEndTime(-1L);
+        }
+        super.die(pSource);
     }
 
     public List<AbstractSpell> getAllProfileSpells() {
@@ -427,6 +447,8 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         serializeCompanion(pCompound);
         pCompound.putInt("SkinVariant", this.getSkinVariant());
         pCompound.putString("BiomeFolder", this.entityData.get(BIOME_FOLDER));
+        this.addPersistentAngerSaveData(pCompound);
+        pCompound.putBoolean("OrderedToStay", orderedToStay);
         if (this.selectedProfile != null && this.selectedProfile.profileId != null) {
             pCompound.putString("ArchetypeProfile", this.selectedProfile.profileId);
         }
@@ -437,10 +459,13 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         super.readAdditionalSaveData(pCompound);
         deserializeCompanion(pCompound);
         this.setSkinVariant(pCompound.getInt("SkinVariant"));
+        this.readPersistentAngerSaveData(this.level(), pCompound);
         if (pCompound.contains("BiomeFolder")) {
             this.entityData.set(BIOME_FOLDER, pCompound.getString("BiomeFolder"));
         }
-
+        if (pCompound.contains("OrderedToStay")) {
+            orderedToStay = pCompound.getBoolean("OrderedToStay");
+        }
         if (pCompound.contains("ArchetypeProfile")) {
             String profileId = pCompound.getString("ArchetypeProfile");
             this.selectedProfile = ArchetypeLoader.INSTANCE.getProfileById(getArchetypeName(), profileId);
@@ -456,10 +481,5 @@ public abstract class HumanEntity extends NeutralWizard implements IRecruitableC
         return ArchetypeUtils.getTextureLocation(
                 this.entityData, CUSTOM_SKIN, BIOME_FOLDER, SKIN_VARIANT, PREFIX, FALLBACK_TEXTURE
         );
-    }
-
-    @Override
-    public Optional<SoundEvent> getAngerSound() {
-        return Optional.of(SoundRegistry.TRADER_NO.get());
     }
 }

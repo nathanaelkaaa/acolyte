@@ -81,7 +81,6 @@ public class HumanArcherEntity extends HumanEntity implements RangedAttackMob {
         int aMin = selectedProfile.attackInterval;
         int aMax = aMin + 20;
         this.goalSelector.addGoal(3, new RangedBowAttackGoal<>(this, 1.0, aMin, 15.0f));
-        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
     @Override
