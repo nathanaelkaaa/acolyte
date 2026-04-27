@@ -8,6 +8,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.raptorzizi.acolyte.AcolyteMod;
+import net.raptorzizi.acolyte.entity.mobs.horn_merchant.HornMerchantEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.demon.DemonArcherEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.demon.DemonMageEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.demon.DemonWarriorEntity;
@@ -55,6 +56,12 @@ public class ModEntityRegistry {
                     .sized(.6f, 1.8f)
                     .clientTrackingRange(64)
                     .build(ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "human_archer").toString()));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<HornMerchantEntity>> HORN_MERCHANT =
+            ENTITIES.register("horn_merchant", () -> EntityType.Builder.of(HornMerchantEntity::new, MobCategory.CREATURE)
+                    .sized(.6f, 1.95f)
+                    .clientTrackingRange(64)
+                    .build(ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "horn_merchant").toString()));
 
     public static void register(IEventBus eventBus) {
         ENTITIES.register(eventBus);

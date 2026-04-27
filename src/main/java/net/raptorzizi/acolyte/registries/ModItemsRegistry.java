@@ -16,7 +16,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.mobs.wizards.demon.DemonSpawner;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanSpawner;
-import net.raptorzizi.acolyte.item.armor.DemonHornItem;
+import net.raptorzizi.acolyte.item.armor.DemonHornsItem;
+import net.raptorzizi.acolyte.item.consumables.DemonHornItem;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -24,15 +25,18 @@ import java.util.function.Supplier;
 public class ModItemsRegistry {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(AcolyteMod.MOD_ID);
 
+    public static final DeferredItem<Item> DEMON_HORN = ITEMS.register("demon_horn",
+            () -> new DemonHornItem(new Item.Properties().food(ModFoodProperties.DEMON_HORN)));
+
     /**
      * Armor
      */
 
     public static final List<DeferredHolder<Item, Item>> DEMON_HORNS = List.of(
-            ITEMS.register("demon_horn_0", () -> new DemonHornItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horn_0", "demon_horn_0")),
-            ITEMS.register("demon_horn_1", () -> new DemonHornItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horn_1", "demon_horn_1")),
-            ITEMS.register("demon_horn_2", () -> new DemonHornItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horn_2", "demon_horn_2")),
-            ITEMS.register("demon_horn_3", () -> new DemonHornItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horn_3", "demon_horn_3"))
+            ITEMS.register("demon_horns_0", () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_0", "demon_horns_0")),
+            ITEMS.register("demon_horns_1", () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_1", "demon_horns_1")),
+            ITEMS.register("demon_horns_2", () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_2", "demon_horns_2")),
+            ITEMS.register("demon_horns_3", () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_3", "demon_horns_3"))
     );
 
     /**
@@ -86,6 +90,9 @@ public class ModItemsRegistry {
                 }
             }
     );
+
+    public static final Supplier<DeferredSpawnEggItem> HORN_MERCHANT_SPAWN_EGG =  ITEMS.register("horn_merchant_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntityRegistry.HORN_MERCHANT, 0x3e4d7b, 0xfafafa, ItemPropertiesHelper.material().stacksTo(64)));
 
     public static void register(IEventBus eventBus)  {
         ITEMS.register(eventBus);

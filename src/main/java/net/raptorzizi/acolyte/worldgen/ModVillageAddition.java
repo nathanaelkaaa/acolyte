@@ -55,22 +55,22 @@ public class ModVillageAddition {
 
         addBuildingToPool(templatePoolRegistry, processorListRegistry,
                 ResourceLocation.parse("minecraft:village/plains/town_centers"),
-                "acolyte:town_centers/plains_tavern_01", 200);
+                "acolyte:town_centers/plains_tavern_01", 100);
 
         addBuildingToPool(templatePoolRegistry, processorListRegistry,
                 ResourceLocation.parse("minecraft:village/desert/town_centers"),
-                "acolyte:town_centers/desert_tavern_01", 200);
+                "acolyte:town_centers/desert_tavern_01", 100);
 
         addBuildingToPool(templatePoolRegistry, processorListRegistry,
                 ResourceLocation.parse("minecraft:village/taiga/town_centers"),
-                "acolyte:town_centers/taiga_tavern_01", 200);
+                "acolyte:town_centers/taiga_tavern_01", 100);
 
         addBuildingToPool(templatePoolRegistry, processorListRegistry,
                 ResourceLocation.parse("minecraft:village/savanna/town_centers"),
-                "acolyte:town_centers/savanna_tavern_01", 200);
+                "acolyte:town_centers/savanna_tavern_01", 100);
 
         addBuildingToPool(templatePoolRegistry, processorListRegistry,
                 ResourceLocation.parse("minecraft:village/snowy/town_centers"),
-                "acolyte:town_centers/snowy_tavern_01", 200);
+                "acolyte:town_centers/snowy_tavern_01", 100);
     }
 }

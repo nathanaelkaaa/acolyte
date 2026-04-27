@@ -4,7 +4,7 @@
   "spawners": [
     {
       "type": "acolyte:demon_archer",
-      "weight": 6,
+      "weight": 8,
       "minCount": 1,
       "maxCount": 1
     }

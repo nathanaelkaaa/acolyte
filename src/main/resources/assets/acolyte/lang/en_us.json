@@ -12,11 +12,15 @@
   "item.acolyte.tavern_spawn_marker_sandstone": "Tavern Spawn Marker Sandstone",
   "block.acolyte.tavern_spawn_marker_sandstone": "Tavern Spawn Marker Sandstone",
 
-  "item.acolyte.demon_horn_0": "Demon Horns",
-  "item.acolyte.demon_horn_1": "Demon Horns",
-  "item.acolyte.demon_horn_2": "Demon Horns",
-  "item.acolyte.demon_horn_3": "Demon Horns",
+  "item.acolyte.demon_horn": "Demon Horn",
 
+  "item.acolyte.demon_horns_0": "Demon Horns",
+  "item.acolyte.demon_horns_1": "Demon Horns",
+  "item.acolyte.demon_horns_2": "Demon Horns",
+  "item.acolyte.demon_horns_3": "Demon Horns",
+
+
+  "item.acolyte.horn_merchant_spawn_egg": "Horn Merchant Spawn Egg",
   "item.acolyte.demon_spawn_egg": "Demon Spawn Egg",
   "item.acolyte.demon_mage_spawn_egg": "Demon Mage Spawn Egg",
   "item.acolyte.demon_warrior_spawn_egg": "Demon Warrior Spawn Egg",
@@ -26,6 +30,7 @@
   "item.acolyte.human_warrior_spawn_egg": "Human Warrior Spawn Egg",
   "item.acolyte.human_archer_spawn_egg": "Human Archer Spawn Egg",
 
+  "entity.acolyte.horn_merchant": "Horn Merchant",
   "entity.acolyte.demon": "Demon",
   "entity.acolyte.demon_mage": "Demon Mage",
   "entity.acolyte.demon_warrior": "Demon Warrior",

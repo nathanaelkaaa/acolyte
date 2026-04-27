@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "D": {
+      "item": "acolyte:demon_horn"
+    }
+  },
+  "pattern":[
+    "DD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "acolyte:demon_horns_0"
+  }
+}

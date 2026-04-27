@@ -20,12 +20,13 @@ public class ModCreativeModeTabs {
             .title(Component.translatable("itemGroup." + AcolyteMod.MOD_ID + ".creative_tab"))
             .icon(() -> new ItemStack(ModItemsRegistry.DEMON_HORNS.getFirst()))
             .displayItems((enabledFeatures, entries) -> {
-                entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_OAK.get());
+                /*entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_OAK.get());
                 entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_COBBLESTONE.get());
                 entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_ACACIA.get());
                 entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_SPRUCE.get());
-                entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_SANDSTONE.get());
+                entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_SANDSTONE.get());*/
                 ModItemsRegistry.DEMON_HORNS.forEach(horn -> entries.accept(horn.get()));
+                entries.accept(ModItemsRegistry.DEMON_HORN.get());
                 entries.accept(ModItemsRegistry.DEMON_MAGE_SPAWN_EGG.get());
                 entries.accept(ModItemsRegistry.DEMON_WARRIOR_SPAWN_EGG.get());
                 entries.accept(ModItemsRegistry.DEMON_ARCHER_SPAWN_EGG.get());
@@ -34,6 +35,7 @@ public class ModCreativeModeTabs {
                 entries.accept(ModItemsRegistry.HUMAN_WARRIOR_SPAWN_EGG.get());
                 entries.accept(ModItemsRegistry.HUMAN_ARCHER_SPAWN_EGG.get());
                 entries.accept(ModItemsRegistry.HUMAN_SPAWN_EGG.get());
+                entries.accept(ModItemsRegistry.HORN_MERCHANT_SPAWN_EGG.get());
             })
             .withTabsBefore(EQUIPMENT_TAB.getKey())
             .build());
