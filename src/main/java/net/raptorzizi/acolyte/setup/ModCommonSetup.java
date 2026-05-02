@@ -11,6 +11,7 @@ import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.mobs.horn_merchant.HornMerchantEntity;
+import net.raptorzizi.acolyte.entity.mobs.lieutenant.LieutenantEntity;
 import net.raptorzizi.acolyte.entity.mobs.horn_merchant.HornMerchantSpawner;
 import net.raptorzizi.acolyte.entity.mobs.wizards.demon.DemonArcherEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanArcherEntity;
@@ -35,6 +36,7 @@ public class ModCommonSetup {
         event.put(ModEntityRegistry.HUMAN_WARRIOR.get(), HumanWarriorEntity.prepareAttributes().build());
         event.put(ModEntityRegistry.HUMAN_ARCHER.get(), HumanArcherEntity.prepareAttributes().build());
         event.put(ModEntityRegistry.HORN_MERCHANT.get(), HornMerchantEntity.prepareAttributes().build());
+        event.put(ModEntityRegistry.LIEUTENANT.get(), LieutenantEntity.prepareAttributes().build());
     }
 
     @SubscribeEvent

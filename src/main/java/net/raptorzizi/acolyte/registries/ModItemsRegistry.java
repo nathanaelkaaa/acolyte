@@ -17,6 +17,7 @@ import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.mobs.wizards.demon.DemonSpawner;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanSpawner;
 import net.raptorzizi.acolyte.item.armor.DemonHornsItem;
+import net.raptorzizi.acolyte.item.consumables.DarkHornItem;
 import net.raptorzizi.acolyte.item.consumables.DemonHornItem;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public class ModItemsRegistry {
 
     public static final DeferredItem<Item> DEMON_HORN = ITEMS.register("demon_horn",
             () -> new DemonHornItem(new Item.Properties().food(ModFoodProperties.DEMON_HORN)));
+    public static final DeferredItem<Item> DARK_HORN = ITEMS.register("dark_horn",
+            () -> new DarkHornItem(new Item.Properties().food(ModFoodProperties.DARK_HORN)));
 
     /**
      * Armor
@@ -93,6 +96,9 @@ public class ModItemsRegistry {
 
     public static final Supplier<DeferredSpawnEggItem> HORN_MERCHANT_SPAWN_EGG =  ITEMS.register("horn_merchant_spawn_egg",
             () -> new DeferredSpawnEggItem(ModEntityRegistry.HORN_MERCHANT, 0x3e4d7b, 0xfafafa, ItemPropertiesHelper.material().stacksTo(64)));
+
+    public static final Supplier<DeferredSpawnEggItem> LIEUTENANT_SPAWN_EGG = ITEMS.register("lieutenant_spawn_egg",
+            () -> new DeferredSpawnEggItem(ModEntityRegistry.LIEUTENANT, 0x1a1a2e, 0xb22222, ItemPropertiesHelper.material().stacksTo(64)));
 
     public static void register(IEventBus eventBus)  {
         ITEMS.register(eventBus);

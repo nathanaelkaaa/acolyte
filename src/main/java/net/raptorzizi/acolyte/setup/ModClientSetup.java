@@ -3,6 +3,7 @@ package net.raptorzizi.acolyte.setup;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.mobs.horn_merchant.HornMerchantRenderer;
+import net.raptorzizi.acolyte.entity.mobs.lieutenant.LieutenantRenderer;
 import net.raptorzizi.acolyte.entity.mobs.wizards.demon.DemonRenderer;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanRenderer;
 import net.raptorzizi.acolyte.gui.RecruitScreen;
@@ -32,6 +33,7 @@ public class ModClientSetup {
         event.registerEntityRenderer(ModEntityRegistry.HUMAN_WARRIOR.get(), HumanRenderer::new);
         event.registerEntityRenderer(ModEntityRegistry.HUMAN_ARCHER.get(), HumanRenderer::new);
         event.registerEntityRenderer(ModEntityRegistry.HORN_MERCHANT.get(), HornMerchantRenderer::new);
+        event.registerEntityRenderer(ModEntityRegistry.LIEUTENANT.get(), LieutenantRenderer::new);
     }
 
 }

@@ -112,7 +112,7 @@ public class AdditionalWanderingHornTrades {
                         new ItemCost(ModItemsRegistry.DEMON_HORN.get(), hornCost),
                         new ItemStack(selectedFocus, 1),
                         12,
-                        5,  // XP
+                        5,
                         .05f
                 );
             });
@@ -338,6 +338,58 @@ public class AdditionalWanderingHornTrades {
             int hornCost = spell.getRarity(level).getValue() * 3 + random.nextIntBetweenInclusive(3, 4);
 
             return new MerchantOffer(new ItemCost(ModItemsRegistry.DEMON_HORN.get(), hornCost), price2, forSale, maxTrades, xp, priceMult);
+        }
+    }
+
+    public static class OreSellTrade extends SimpleTrade {
+        private record OreEntry(Item item, int cost, int maxUses) {}
+
+        public OreSellTrade() {
+            super((trader, random) -> {
+                List<OreEntry> entries = List.of(
+                        new OreEntry(Items.NETHERITE_INGOT, 1, 3),
+                        new OreEntry(ItemRegistry.MITHRIL_SCRAP.get(), 1, 5),
+                        new OreEntry(ItemRegistry.MITHRIL_INGOT.get(), 3, 3)
+                );
+                OreEntry selected = entries.get(random.nextInt(entries.size()));
+                return new MerchantOffer(
+                        new ItemCost(ModItemsRegistry.DARK_HORN.get(), selected.cost),
+                        new ItemStack(selected.item),
+                        selected.maxUses,
+                        10,
+                        .05f
+                );
+            });
+        }
+    }
+
+    public static class UpgradeOrbSellTrade extends SimpleTrade {
+        public UpgradeOrbSellTrade() {
+            super((trader, random) -> {
+                List<Item> orbs = List.of(
+                        ItemRegistry.UPGRADE_ORB.get(),
+                        ItemRegistry.FIRE_UPGRADE_ORB.get(),
+                        ItemRegistry.ICE_UPGRADE_ORB.get(),
+                        ItemRegistry.LIGHTNING_UPGRADE_ORB.get(),
+                        ItemRegistry.HOLY_UPGRADE_ORB.get(),
+                        ItemRegistry.ENDER_UPGRADE_ORB.get(),
+                        ItemRegistry.BLOOD_UPGRADE_ORB.get(),
+                        ItemRegistry.EVOCATION_UPGRADE_ORB.get(),
+                        ItemRegistry.NATURE_UPGRADE_ORB.get(),
+                        ItemRegistry.MANA_UPGRADE_ORB.get(),
+                        ItemRegistry.COOLDOWN_UPGRADE_ORB.get(),
+                        ItemRegistry.PROTECTION_UPGRADE_ORB.get()
+                );
+                Item selected = orbs.get(random.nextInt(orbs.size()));
+                int cost = random.nextIntBetweenInclusive(3, 4);
+                return new MerchantOffer(
+                        new ItemCost(ModItemsRegistry.DARK_HORN.get(), cost),
+                        new ItemStack(selected),
+                        2,
+                        10,
+                        .05f
+                );
+            });
         }
     }
 }

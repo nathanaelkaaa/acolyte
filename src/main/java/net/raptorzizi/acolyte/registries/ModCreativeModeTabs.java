@@ -27,6 +27,7 @@ public class ModCreativeModeTabs {
                 entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_SANDSTONE.get());*/
                 ModItemsRegistry.DEMON_HORNS.forEach(horn -> entries.accept(horn.get()));
                 entries.accept(ModItemsRegistry.DEMON_HORN.get());
+                entries.accept(ModItemsRegistry.DARK_HORN.get());
                 entries.accept(ModItemsRegistry.DEMON_MAGE_SPAWN_EGG.get());
                 entries.accept(ModItemsRegistry.DEMON_WARRIOR_SPAWN_EGG.get());
                 entries.accept(ModItemsRegistry.DEMON_ARCHER_SPAWN_EGG.get());
@@ -36,6 +37,7 @@ public class ModCreativeModeTabs {
                 entries.accept(ModItemsRegistry.HUMAN_ARCHER_SPAWN_EGG.get());
                 entries.accept(ModItemsRegistry.HUMAN_SPAWN_EGG.get());
                 entries.accept(ModItemsRegistry.HORN_MERCHANT_SPAWN_EGG.get());
+                entries.accept(ModItemsRegistry.LIEUTENANT_SPAWN_EGG.get());
             })
             .withTabsBefore(EQUIPMENT_TAB.getKey())
             .build());

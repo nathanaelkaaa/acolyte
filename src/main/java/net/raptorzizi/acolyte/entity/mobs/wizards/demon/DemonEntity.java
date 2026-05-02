@@ -35,6 +35,7 @@ import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeLoader;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeProfile;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeUtils;
+import net.raptorzizi.acolyte.entity.mobs.lieutenant.LieutenantEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanEntity;
 import net.raptorzizi.acolyte.registries.ModItemsRegistry;
 
@@ -214,6 +215,18 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
         return ArchetypeUtils.getTextureLocation(
                 this.entityData, CUSTOM_SKIN, BIOME_FOLDER, SKIN_VARIANT, PREFIX , FALLBACK_TEXTURE
         );
+    }
+
+    @Override
+    public boolean isAlliedTo(Entity pEntity) {
+        return super.isAlliedTo(pEntity) || pEntity instanceof DemonEntity || pEntity instanceof LieutenantEntity;
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        Entity attacker = pSource.getEntity();
+        if (attacker instanceof DemonEntity || attacker instanceof LieutenantEntity) return false;
+        return super.hurt(pSource, pAmount);
     }
 
     @Override

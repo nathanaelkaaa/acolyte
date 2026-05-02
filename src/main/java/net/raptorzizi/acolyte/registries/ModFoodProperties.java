@@ -9,4 +9,10 @@ public class ModFoodProperties {
             .saturationModifier(0)
             .alwaysEdible()
             .build();
+
+    public static final FoodProperties DARK_HORN = new FoodProperties.Builder()
+            .nutrition(6)
+            .saturationModifier(0)
+            .alwaysEdible()
+            .build();
 }

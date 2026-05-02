@@ -124,6 +124,19 @@ public class HornMerchantEntity extends AbstractVillager implements GeoEntity {
             if (offer != null) offers.add(offer);
         }
 
+        // Legendary
+        List<VillagerTrades.ItemListing> legendaryPool = new ArrayList<>(List.of(
+                new AdditionalWanderingHornTrades.OreSellTrade(),
+                new AdditionalWanderingHornTrades.UpgradeOrbSellTrade()
+        ));
+
+        Collections.shuffle(legendaryPool);
+
+        for (int i = 0; i < 1; i++) {
+            MerchantOffer offer = legendaryPool.get(i).getOffer(this, random);
+            if (offer != null) offers.add(offer);
+        }
+
         offers.removeIf(Objects::isNull);
     }
 
