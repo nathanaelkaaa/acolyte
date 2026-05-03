@@ -27,12 +27,16 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
 
     private static final int GUI_W = 176;
     private static final int GUI_H = 232;
-    private static final int GUI_H_TOTAL = 280;
+    private static final int GUI_H_TOTAL = 360;
 
     private static final int PORTRAIT_X    = 7;
     private static final int PORTRAIT_Y    = 17;
     private static final int PORTRAIT_W = 48;
     private static final int PORTRAIT_H = 64;
+
+    private static final int FRAME_W = 50;
+    private static final int FRAME_H = 70;
+    private static final int FRAME_TEX_Y = 281;
 
     private static final int STATS_X      = PORTRAIT_X + PORTRAIT_W + 6;
     private static final int STAT_HP_Y    = 17;
@@ -60,27 +64,27 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
             Button recruitButton = new TexturedButton(
                     this.leftPos + 7, this.topPos + 107, 161, 16,
                     Component.translatable("gui.acolyte.recruit.contract_cost"),
-                    btn -> onRecruitClicked(), 0, 248, 0, 264, 161, 16, 176, 280
+                    btn -> onRecruitClicked(), 0, 248, 0, 264, 161, 16, 176, 360
             );
             this.addRenderableWidget(recruitButton);
         } else {
             Button followButton = new TexturedButton(
                     this.leftPos + 7, this.topPos + 107, 48, 16,
                     Component.translatable("gui.acolyte.recruit.follow"),
-                    btn -> onOrderClicked(false), 0, 232, 48, 232, 48, 16, 176, 280);
+                    btn -> onOrderClicked(false), 0, 232, 48, 232, 48, 16, 176, 360);
             this.addRenderableWidget(followButton);
 
             Button stayButton = new TexturedButton(
                     this.leftPos + 62, this.topPos + 107, 48, 16,
                     Component.translatable("gui.acolyte.recruit.stay"),
-                    btn -> onOrderClicked(true), 0, 232, 48, 232, 48, 16, 176, 280
+                    btn -> onOrderClicked(true), 0, 232, 48, 232, 48, 16, 176, 360
             );
             this.addRenderableWidget(stayButton);
 
             Button unrecruitButton = new TexturedButton(
                     this.leftPos + 117, this.topPos + 107, 48, 16,
-                    Component.translatable("gui.acolyte.recruit.unrecruit").withStyle(net.minecraft.ChatFormatting.RED),
-                    btn -> onUnrecruitClicked(), 0, 232, 48, 232, 48, 16, 176, 280
+                    Component.translatable("gui.acolyte.recruit.unrecruit"),
+                    btn -> onUnrecruitClicked(), 0, 232, 48, 232, 48, 16, 176, 360
             );
             this.addRenderableWidget(unrecruitButton);
         }
@@ -120,6 +124,8 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
             }
         }
 
+        renderTierFrame(guiGraphics, x, y);
+
         int nameW = this.font.width(menu.displayName);
         guiGraphics.drawString(this.font,
                 menu.displayName,
@@ -134,6 +140,15 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
         }
     }
 
+
+    private void renderTierFrame(GuiGraphics guiGraphics, int x, int y) {
+        int tier = Math.max(1, Math.min(3, menu.tier));
+        int texU = (tier - 1) * FRAME_W;
+        int frameX = x + PORTRAIT_X + (PORTRAIT_W - FRAME_W) / 2;
+        int frameY = y + PORTRAIT_Y + (PORTRAIT_H - FRAME_H) / 2;
+        guiGraphics.blit(SCREEN_TEXTURE, frameX, frameY, FRAME_W, FRAME_H,
+                texU, FRAME_TEX_Y, FRAME_W, FRAME_H, GUI_W, GUI_H_TOTAL);
+    }
 
     private void renderStats(GuiGraphics guiGraphics, int x, int y) {
         int sx = x + STATS_X;
@@ -272,13 +287,10 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
                     u, v, texW, texH,               // source
                     texTotalW, texTotalH);
 
-            guiGraphics.drawCenteredString(
-                    net.minecraft.client.Minecraft.getInstance().font,
-                    getMessage(),
-                    getX() + width / 2,
-                    getY() + (height - 8) / 2,
-                    0xFFFFFF
-            );
+            net.minecraft.client.gui.Font font = net.minecraft.client.Minecraft.getInstance().font;
+            int textX = getX() + width / 2 - font.width(getMessage()) / 2;
+            int textY = getY() + (height - 8) / 2;
+            guiGraphics.drawString(font, getMessage(), textX, textY, 0x000000, false);
         }
     }
 }

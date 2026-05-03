@@ -27,12 +27,13 @@ public class RecruitMenu extends AbstractContainerMenu {
     public final int recruitCost;
     public final long remainingTicks;
     public final long totalDurationTicks;
+    public final int tier;
 
     // Server
     public RecruitMenu(int containerId, Inventory playerInventory,
                        int entityId, float health, float maxHealth, float attackDamage, float armor,
                        boolean isRecruited, float contractProgress, String displayName, List<ResourceLocation> spellIds,
-                       int recruitCost, long remainingTicks, long totalDurationTicks) {
+                       int recruitCost, long remainingTicks, long totalDurationTicks, int tier) {
         super(ModMenuRegistry.RECRUIT_MENU.get(), containerId);
         this.entityId         = entityId;
         this.health           = health;
@@ -46,6 +47,7 @@ public class RecruitMenu extends AbstractContainerMenu {
         this.recruitCost      = recruitCost;
         this.remainingTicks   = remainingTicks;
         this.totalDurationTicks = totalDurationTicks;
+        this.tier             = tier;
         addPlayerInventory(playerInventory);
     }
 
@@ -67,6 +69,7 @@ public class RecruitMenu extends AbstractContainerMenu {
         this.recruitCost      = buf.readInt();
         this.remainingTicks   = buf.readLong();
         this.totalDurationTicks = buf.readLong();
+        this.tier             = buf.readInt();
         addPlayerInventory(playerInventory);
     }
 

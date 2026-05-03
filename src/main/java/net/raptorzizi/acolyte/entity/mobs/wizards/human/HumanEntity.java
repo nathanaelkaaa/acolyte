@@ -342,6 +342,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
                 .map(s -> s.getSpellResource()).toList();
         String name = this.getDisplayName().getString();
         int id = this.getId();
+        int tier = (selectedProfile != null) ? selectedProfile.tier : 1;
 
         player.openMenu(new MenuProvider() {
             @Override
@@ -353,7 +354,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
             public AbstractContainerMenu createMenu(
                     int containerId, Inventory inventory, Player p) {
                 return new RecruitMenu(containerId, inventory,
-                        id, hp, maxHp, atk, def, isRecruited, progress, name, spellIds, cost, remaining, totalDuration);
+                        id, hp, maxHp, atk, def, isRecruited, progress, name, spellIds, cost, remaining, totalDuration, tier);
             }
         }, buf -> {
             buf.writeInt(id);
@@ -369,6 +370,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
             buf.writeInt(cost);
             buf.writeLong(remaining);
             buf.writeLong(totalDuration);
+            buf.writeInt(tier);
         });
     }
 
