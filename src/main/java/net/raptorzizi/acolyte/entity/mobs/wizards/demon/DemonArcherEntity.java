@@ -17,7 +17,6 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -25,6 +24,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.raptorzizi.acolyte.entity.goals.SingleUseSpellGoal;
+import net.raptorzizi.acolyte.entity.goals.UniversalRangedGoal;
 import software.bernie.geckolib.animation.*;
 
 public class DemonArcherEntity extends DemonEntity implements RangedAttackMob {
@@ -52,7 +52,7 @@ public class DemonArcherEntity extends DemonEntity implements RangedAttackMob {
 
     @Override
     protected String getArchetypeName() {
-        return "archer";
+        return "demon/archer";
     }
 
     @Override
@@ -76,7 +76,7 @@ public class DemonArcherEntity extends DemonEntity implements RangedAttackMob {
         }
 
         int aMin = selectedProfile.attackInterval;
-        this.goalSelector.addGoal(3, new RangedBowAttackGoal<>(this, 1.0, aMin, 15.0f));
+        this.goalSelector.addGoal(3, new UniversalRangedGoal(this, 1.0, aMin, 15.0f));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
@@ -153,13 +153,6 @@ public class DemonArcherEntity extends DemonEntity implements RangedAttackMob {
                 }
             } else if (target != null) {
                 this.entityData.set(IS_CHARGING_BOW, true);
-                if (!this.isUsingItem()) {
-                    this.startUsingItem(
-                            this.getItemInHand(InteractionHand.MAIN_HAND).is(Items.BOW)
-                                    ? InteractionHand.MAIN_HAND
-                                    : InteractionHand.OFF_HAND
-                    );
-                }
             } else {
                 this.entityData.set(IS_CHARGING_BOW, false);
                 this.entityData.set(IS_RELEASING_BOW, false);
@@ -176,7 +169,7 @@ public class DemonArcherEntity extends DemonEntity implements RangedAttackMob {
 
     @Override
     public boolean canFireProjectileWeapon(ProjectileWeaponItem weapon) {
-        return weapon instanceof BowItem;
+        return weapon instanceof BowItem || weapon instanceof CrossbowItem;
     }
 
     @Override

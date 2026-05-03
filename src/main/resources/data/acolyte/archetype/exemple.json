@@ -2,6 +2,7 @@
   "profiles": [
     {
       "weight": 2,
+      "tier": 3,
       "name": "Exemple",
       "skin": "acolyte:textures/entity/exemple.png",
       "equipment": {

@@ -20,7 +20,7 @@ public class HumanMageEntity extends HumanEntity {
 
     @Override
     protected String getArchetypeName() {
-        return "mage";
+        return "human/mage";
     }
 
     @Override

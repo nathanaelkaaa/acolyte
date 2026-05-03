@@ -17,17 +17,17 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.ai.goal.RangedBowAttackGoal;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.level.Level;
 import net.raptorzizi.acolyte.entity.goals.SingleUseSpellGoal;
+import net.raptorzizi.acolyte.entity.goals.UniversalRangedGoal;
 import software.bernie.geckolib.animation.*;
 
 public class HumanArcherEntity extends HumanEntity implements RangedAttackMob {
@@ -55,7 +55,7 @@ public class HumanArcherEntity extends HumanEntity implements RangedAttackMob {
 
     @Override
     protected String getArchetypeName() {
-        return "archer";
+        return "human/archer";
     }
 
     @Override
@@ -79,8 +79,7 @@ public class HumanArcherEntity extends HumanEntity implements RangedAttackMob {
         }
 
         int aMin = selectedProfile.attackInterval;
-        int aMax = aMin + 20;
-        this.goalSelector.addGoal(3, new RangedBowAttackGoal<>(this, 1.0, aMin, 15.0f));
+        this.goalSelector.addGoal(3, new UniversalRangedGoal(this, 1.0, aMin, 15.0f));
     }
 
     @Override
@@ -144,10 +143,8 @@ public class HumanArcherEntity extends HumanEntity implements RangedAttackMob {
     @Override
     public void tick() {
         super.tick();
-
         if (!this.level().isClientSide) {
             LivingEntity target = this.getTarget();
-
             if (attackAnimationTick > 0) {
                 attackAnimationTick--;
                 if (attackAnimationTick == 0) {
@@ -156,13 +153,6 @@ public class HumanArcherEntity extends HumanEntity implements RangedAttackMob {
                 }
             } else if (target != null) {
                 this.entityData.set(IS_CHARGING_BOW, true);
-                if (!this.isUsingItem()) {
-                    this.startUsingItem(
-                            this.getItemInHand(InteractionHand.MAIN_HAND).is(Items.BOW)
-                                    ? InteractionHand.MAIN_HAND
-                                    : InteractionHand.OFF_HAND
-                    );
-                }
             } else {
                 this.entityData.set(IS_CHARGING_BOW, false);
                 this.entityData.set(IS_RELEASING_BOW, false);
@@ -179,7 +169,7 @@ public class HumanArcherEntity extends HumanEntity implements RangedAttackMob {
 
     @Override
     public boolean canFireProjectileWeapon(ProjectileWeaponItem weapon) {
-        return weapon instanceof BowItem;
+        return weapon instanceof BowItem || weapon instanceof CrossbowItem;
     }
 
     @Override

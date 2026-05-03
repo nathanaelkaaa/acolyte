@@ -53,7 +53,7 @@ public class DemonWarriorEntity extends DemonEntity implements IAnimatedAttacker
 
     @Override
     protected String getArchetypeName() {
-        return "warrior";
+        return "demon/warrior";
     }
 
     protected LookControl createLookControl() {
@@ -70,6 +70,11 @@ public class DemonWarriorEntity extends DemonEntity implements IAnimatedAttacker
 
     protected MoveControl createMoveControl() {
         return new MoveControl(this) {
+            @Override
+            public void strafe(float pForwards, float pStrafe) {
+                super.strafe(pForwards, 0f);
+            }
+
             protected float rotlerp(float pSourceAngle, float pTargetAngle, float pMaximumChange) {
                 double d0 = this.wantedX - this.mob.getX();
                 double d1 = this.wantedZ - this.mob.getZ();
@@ -98,18 +103,16 @@ public class DemonWarriorEntity extends DemonEntity implements IAnimatedAttacker
                     selectedProfile.singleUseSpell, 1, 1, dMin, dMax));
         }
 
-        int aMin = selectedProfile.attackInterval;
-        int aMax = aMin + 30;
-        GenericAnimatedWarlockAttackGoal<DemonWarriorEntity> meleeGoal =
-                new GenericAnimatedWarlockAttackGoal<>(this, 1.0f, aMin, aMax)
-                        .setMoveset(List.of(
-                                new AttackAnimationData(8,  "simple_sword_lunge_stab",     6),
-                                new AttackAnimationData(10, "simple_sword_stab_alternate",  8),
-                                new AttackAnimationData(28, "sword_single_horizontal",     12),
-                                new AttackAnimationData(43, "sword_double_slash",          13, 29)
-                        ))
-                        .setComboChance(.4f);
-
+        int aMin = selectedProfile.attackInterval / 2;
+        int aMax = aMin + 10;
+        WarriorMeleeGoal meleeGoal = new WarriorMeleeGoal(this, 1.0f, aMin, aMax);
+        meleeGoal.setMoveset(List.of(
+                new AttackAnimationData(8,  "simple_sword_lunge_stab",     6),
+                new AttackAnimationData(10, "simple_sword_stab_alternate",  8),
+                new AttackAnimationData(28, "sword_single_horizontal",     12),
+                new AttackAnimationData(43, "sword_double_slash",          13, 29)
+        ));
+        meleeGoal.setComboChance(.4f);
         meleeGoal.setMeleeAttackInverval(aMin, aMax);
         meleeGoal.setMeleeMovespeedModifier(1.3f);
 
@@ -175,4 +178,38 @@ public class DemonWarriorEntity extends DemonEntity implements IAnimatedAttacker
 
     @Override
     protected boolean shouldDespawnInPeaceful() { return true; }
+
+    private class WarriorMeleeGoal extends GenericAnimatedWarlockAttackGoal<DemonWarriorEntity> {
+
+        public WarriorMeleeGoal(DemonWarriorEntity mob, float speedModifier, int minInterval, int maxInterval) {
+            super(mob, speedModifier, minInterval, maxInterval);
+        }
+
+        @Override
+        public void tick() {
+            super.tick();
+            this.wantsToMelee = true;
+        }
+
+        @Override
+        protected void doMovement(double distanceSquared) {
+            if (target == null || target.isDeadOrDying()) {
+                mob.getNavigation().stop();
+                return;
+            }
+            mob.getLookControl().setLookAt(target);
+            float meleeRange = meleeRange();
+            if (distanceSquared > meleeRange * meleeRange) {
+                if (mob.tickCount % 5 == 0) {
+                    mob.getNavigation().moveTo(target, meleeMoveSpeedModifier);
+                }
+            } else {
+                mob.getNavigation().stop();
+            }
+        }
+
+        @Override
+        protected void doSpellAction() {
+        }
+    }
 }

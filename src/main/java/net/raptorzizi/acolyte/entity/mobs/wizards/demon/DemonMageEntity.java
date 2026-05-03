@@ -18,7 +18,7 @@ public class DemonMageEntity extends DemonEntity {
 
     @Override
     protected String getArchetypeName() {
-        return "mage";
+        return "demon/mage";
     }
 
     @Override
