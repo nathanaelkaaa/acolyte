@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "min": 2, "max": 5 },
+      "entries": [
+        { "type": "minecraft:item", "weight": 7, "name": "minecraft:beetroot",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 8 } }] },
+        { "type": "minecraft:item", "weight": 4, "name": "minecraft:beetroot_soup" },
+        { "type": "minecraft:empty", "weight": 5 }
+      ]
+    }
+  ]
+}

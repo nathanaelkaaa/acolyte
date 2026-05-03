@@ -45,13 +45,6 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
     private static final int COLOR_LABEL  = 0x6B4F2A;
     private static final int COLOR_VALUE  = 0x1A1A1A;
 
-    private static final int BAR_X_OFFSET = 7;
-    private static final int BAR_W        = 48;
-    private static final int BAR_H        = 15;
-    private static final int COLOR_BAR_BG  = 0xFF2A1F14;
-    private static final int COLOR_BAR_HI  = 0xFF4CAF50;
-    private static final int COLOR_BAR_MID = 0xFFFFC107;
-    private static final int COLOR_BAR_LOW = 0xFFF44336;
 
     public RecruitScreen(RecruitMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -138,8 +131,6 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
 
         if (!menu.isRecruited) {
             renderHireCost(guiGraphics);
-        } else {
-            renderContractZone(guiGraphics, x, y);
         }
     }
 
@@ -233,27 +224,6 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
         }
     }
 
-    private void renderContractZone(GuiGraphics guiGraphics, int x, int y) {
-        int barX  = x + BAR_X_OFFSET;
-        int barY  = y + 87;
-        float prog = Math.max(0f, Math.min(1f, menu.contractProgress));
-
-        guiGraphics.fill(barX, barY, barX + BAR_W, barY + BAR_H, COLOR_BAR_BG);
-
-        int fillColor = prog > 0.5f ? COLOR_BAR_HI
-                : prog > 0.25f ? COLOR_BAR_MID
-                : COLOR_BAR_LOW;
-        int fillW = (int)(BAR_W * prog);
-        if (fillW > 0) {
-            guiGraphics.fill(barX, barY, barX + fillW, barY + BAR_H, fillColor);
-        }
-
-        guiGraphics.renderOutline(barX, barY, BAR_W, BAR_H, 0xFF000000);
-        String pct  = String.format("%d%%", (int)(prog * 100));
-        int    pctW = this.font.width(pct);
-        guiGraphics.drawString(this.font, pct,
-                barX + (BAR_W - pctW) / 2, barY + 4, 0xFFFFFF, true);
-    }
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {}

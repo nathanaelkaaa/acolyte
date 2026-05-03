@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "acolyte:watchtower/oak_watchtower",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 40,
+    "separation": 12,
+    "salt": 947382615
+  }
+}

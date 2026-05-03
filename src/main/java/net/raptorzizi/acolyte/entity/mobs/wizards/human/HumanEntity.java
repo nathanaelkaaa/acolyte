@@ -387,7 +387,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
     @Override
     public void onUnRecruit() {
         if (!level().isClientSide) {
-            MagicManager.spawnParticles(level(), ParticleTypes.POOF, getX(), getY(), getZ(), 25, .4, .8, .4, .03, false);
+            MagicManager.spawnParticles(level(), ParticleTypes.CAMPFIRE_COSY_SMOKE, getX(), getY(), getZ(), 25, .4, .8, .4, .03, false);
             setRemoved(RemovalReason.DISCARDED);
         }
     }
@@ -395,7 +395,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
     public void onContractExpired() {
         IRecruitableCompanion.super.onContractExpired();
         if (!level().isClientSide) {
-            MagicManager.spawnParticles(level(), ParticleTypes.POOF, getX(), getY(), getZ(), 25, .4, .8, .4, .03, false);
+            MagicManager.spawnParticles(level(), ParticleTypes.CAMPFIRE_COSY_SMOKE, getX(), getY(), getZ(), 25, .4, .8, .4, .03, false);
             setRemoved(RemovalReason.DISCARDED);
         }
     }

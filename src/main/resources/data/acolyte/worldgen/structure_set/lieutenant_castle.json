@@ -1,0 +1,13 @@
+{
+  "structures": [
+    { "structure": "acolyte:lieutenant_castle/lieutenant_castle", "weight": 1 }
+  ],
+  "placement": {
+    "type": "minecraft:concentric_rings",
+    "distance": 64,
+    "spread": 40,
+    "count": 10,
+    "preferred_biomes": "#acolyte:has_lieutenant_castle",
+    "salt": 612748391
+  }
+}

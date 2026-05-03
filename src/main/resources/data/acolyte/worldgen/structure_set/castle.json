@@ -1,0 +1,13 @@
+{
+  "structures": [
+    { "structure": "acolyte:castle/castle_0", "weight": 1 },
+    { "structure": "acolyte:castle/castle_1", "weight": 1 },
+    { "structure": "acolyte:castle/castle_2", "weight": 1 }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 72,
+    "separation": 24,
+    "salt": 947261038
+  }
+}

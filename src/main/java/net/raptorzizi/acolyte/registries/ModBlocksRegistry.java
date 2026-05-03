@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.block.tavern_spawn_marker.TavernSpawnMarkerBlock;
+import net.raptorzizi.acolyte.block.demon_spawn_marker.DemonSpawnMarkerBlock;
 
 import java.util.function.Supplier;
 
@@ -49,6 +50,43 @@ public class ModBlocksRegistry {
             () -> new TavernSpawnMarkerBlock(
                     BlockBehaviour.Properties.ofFullCopy(Blocks.SMOOTH_SANDSTONE)
             )
+    );
+
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_OAK = registerBlock(
+            "demon_spawn_marker_oak",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS))
+    );
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_SPRUCE = registerBlock(
+            "demon_spawn_marker_spruce",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_PLANKS))
+    );
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_BIRCH = registerBlock(
+            "demon_spawn_marker_birch",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.BIRCH_PLANKS))
+    );
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_DARK_OAK = registerBlock(
+            "demon_spawn_marker_dark_oak",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.DARK_OAK_PLANKS))
+    );
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_ACACIA = registerBlock(
+            "demon_spawn_marker_acacia",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.ACACIA_PLANKS))
+    );
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_JUNGLE = registerBlock(
+            "demon_spawn_marker_jungle",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.JUNGLE_PLANKS))
+    );
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_MANGROVE = registerBlock(
+            "demon_spawn_marker_mangrove",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.MANGROVE_PLANKS))
+    );
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_COBBLESTONE = registerBlock(
+            "demon_spawn_marker_cobblestone",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBBLESTONE))
+    );
+    public static final DeferredBlock<Block> DEMON_SPAWN_MARKER_STONE_BRICKS = registerBlock(
+            "demon_spawn_marker_stone_bricks",
+            () -> new DemonSpawnMarkerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.STONE_BRICKS))
     );
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {

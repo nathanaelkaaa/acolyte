@@ -28,7 +28,7 @@ public class RecruitMenu extends AbstractContainerMenu {
     public final long remainingTicks;
     public final long totalDurationTicks;
 
-    // Constructeur server
+    // Server
     public RecruitMenu(int containerId, Inventory playerInventory,
                        int entityId, float health, float maxHealth, float attackDamage, float armor,
                        boolean isRecruited, float contractProgress, String displayName, List<ResourceLocation> spellIds,
@@ -49,7 +49,7 @@ public class RecruitMenu extends AbstractContainerMenu {
         addPlayerInventory(playerInventory);
     }
 
-    // Constructeur client
+    // Client
     public RecruitMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         super(ModMenuRegistry.RECRUIT_MENU.get(), containerId);
         this.entityId         = buf.readInt();

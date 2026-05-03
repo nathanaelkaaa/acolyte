@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#acolyte:has_mangrove_watchtower",
+  "spawn_overrides": {},
+  "step": "surface_structures",
+  "start_pool": "acolyte:watchtower/mangrove_watchtower",
+  "size": 1,
+  "start_height": {
+    "absolute": 0
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 16,
+  "use_expansion_hack": false
+}

@@ -1,0 +1,12 @@
+{
+  "structures": [
+    { "structure": "acolyte:tower/tower_0", "weight": 1 },
+    { "structure": "acolyte:tower/tower_1", "weight": 1 }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 48,
+    "separation": 16,
+    "salt": 183650294
+  }
+}

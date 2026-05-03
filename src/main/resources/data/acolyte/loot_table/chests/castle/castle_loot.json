@@ -1,0 +1,63 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": { "min": 5, "max": 9 },
+      "entries": [
+        { "type": "minecraft:item", "weight": 6, "name": "minecraft:iron_ingot",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }] },
+        { "type": "minecraft:item", "weight": 4, "name": "minecraft:gold_ingot",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }] },
+        { "type": "minecraft:item", "weight": 4, "name": "minecraft:emerald",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }] },
+        { "type": "minecraft:item", "weight": 5, "name": "minecraft:arrow",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 4, "max": 16 } }] },
+        { "type": "minecraft:item", "weight": 3, "name": "minecraft:spectral_arrow",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 6 } }] },
+        { "type": "minecraft:item", "weight": 3, "name": "minecraft:string",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }] },
+        { "type": "minecraft:item", "weight": 3, "name": "minecraft:gunpowder",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }] },
+        { "type": "minecraft:item", "weight": 2, "name": "minecraft:tnt" },
+        { "type": "minecraft:item", "weight": 2, "name": "minecraft:leather",
+          "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }] },
+        { "type": "minecraft:item", "weight": 2, "name": "minecraft:book" },
+        { "type": "minecraft:empty", "weight": 8 }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "minecraft:item", "weight": 4, "name": "minecraft:iron_sword",
+          "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.3, "max": 1.0 } }] },
+        { "type": "minecraft:item", "weight": 3, "name": "minecraft:iron_chestplate",
+          "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.3, "max": 1.0 } }] },
+        { "type": "minecraft:item", "weight": 3, "name": "minecraft:iron_helmet",
+          "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.3, "max": 1.0 } }] },
+        { "type": "minecraft:item", "weight": 3, "name": "minecraft:iron_leggings",
+          "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.3, "max": 1.0 } }] },
+        { "type": "minecraft:item", "weight": 3, "name": "minecraft:iron_boots",
+          "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.3, "max": 1.0 } }] },
+        { "type": "minecraft:item", "weight": 2, "name": "minecraft:crossbow",
+          "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.3, "max": 1.0 } }] },
+        { "type": "minecraft:item", "weight": 2, "name": "minecraft:shield" },
+        { "type": "minecraft:item", "weight": 1, "name": "minecraft:diamond_sword",
+          "functions": [{ "function": "minecraft:set_damage", "damage": { "type": "minecraft:uniform", "min": 0.2, "max": 0.7 } }] }
+      ]
+    },
+    {
+      "rolls": { "min": 0, "max": 2 },
+      "entries": [
+        { "type": "minecraft:loot_table", "value": "irons_spellbooks:magic_items/poor_ink" }
+      ],
+      "conditions": [{ "condition": "minecraft:random_chance", "chance": 0.5 }]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        { "type": "minecraft:loot_table", "value": "irons_spellbooks:magic_items/basic_curios" }
+      ],
+      "conditions": [{ "condition": "minecraft:random_chance", "chance": 0.2 }]
+    }
+  ]
+}
