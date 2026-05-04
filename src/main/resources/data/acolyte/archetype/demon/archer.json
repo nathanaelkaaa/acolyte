@@ -1,42 +1,29 @@
 {
   "profiles": [
     {
-      "weight": 3,
-      "tier": 1
-    },
-    {
       "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:poison_arrow"
+      "tier": 1,
+      "stats": {
+        "max_health": 20.0,
+        "attack_damage": 6.0,
+        "armor": 0.0,
+        "attack_interval": 20
+      },
+      "equipment": {
+        "mainhand": "minecraft:bow"
       }
     },
     {
       "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:magic_arrow"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:fire_arrow"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:fire_arrow"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:gust"
+      "tier": 1,
+      "stats": {
+        "max_health": 20.0,
+        "attack_damage": 6.0,
+        "armor": 0.0,
+        "attack_interval": 20
+      },
+      "equipment": {
+        "mainhand": "minecraft:crossbow"
       }
     }
   ]

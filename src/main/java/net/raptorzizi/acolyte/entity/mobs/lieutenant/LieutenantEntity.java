@@ -156,7 +156,7 @@ public class LieutenantEntity extends AbstractSpellCastingMob implements Enemy, 
 
     public static AttributeSupplier.Builder prepareAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.ATTACK_DAMAGE, 12.0)
+                .add(Attributes.ATTACK_DAMAGE, 0.0)
                 .add(Attributes.MAX_HEALTH, 180.0)
                 .add(Attributes.FOLLOW_RANGE, 25.0)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.8)

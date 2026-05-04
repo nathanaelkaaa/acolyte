@@ -7,7 +7,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.raptorzizi.acolyte.entity.mobs.wizards.human.IRecruitableCompanion;
 import net.raptorzizi.acolyte.registries.ModMenuRegistry;
 
 import java.util.ArrayList;
@@ -91,14 +90,14 @@ public class RecruitMenu extends AbstractContainerMenu {
                 this.addSlot(new Slot(playerInventory,
                         col + row * 9 + 9,
                         8 + col * 18,
-                        150 + row * 18));
+                        135 + row * 18));
             }
         }
         for (int col = 0; col < 9; col++) {
             this.addSlot(new Slot(playerInventory,
                     col,
                     8 + col * 18,
-                    208));
+                    193));
         }
     }
 }

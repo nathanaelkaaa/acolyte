@@ -26,23 +26,22 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
                     "textures/gui/recruit_screen.png");
 
     private static final int GUI_W = 176;
-    private static final int GUI_H = 232;
-    private static final int GUI_H_TOTAL = 360;
+    private static final int GUI_H = 217;
+    private static final int GUI_H_TOTAL = 335;
 
-    private static final int PORTRAIT_X    = 7;
-    private static final int PORTRAIT_Y    = 17;
+    private static final int PORTRAIT_X = 7;
+    private static final int PORTRAIT_Y = 17;
     private static final int PORTRAIT_W = 48;
     private static final int PORTRAIT_H = 64;
 
     private static final int FRAME_W = 50;
     private static final int FRAME_H = 70;
-    private static final int FRAME_TEX_Y = 281;
+    private static final int FRAME_TEX_Y = 265;
 
     private static final int STATS_X      = PORTRAIT_X + PORTRAIT_W + 6;
     private static final int STAT_HP_Y    = 17;
-    private static final int STAT_ATK_Y   = 37;
-    private static final int STAT_ARMOR_Y = 57;
-    private static final int STAT_DURATION_Y = 77;
+    private static final int STAT_ARMOR_Y = 37;
+    private static final int STAT_DURATION_Y = 57;
     private static final int STAT_SPELL_Y = 17;
 
     private static final int COLOR_TITLE  = 0x404040;
@@ -62,29 +61,29 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
 
         if (!menu.isRecruited) {
             Button recruitButton = new TexturedButton(
-                    this.leftPos + 7, this.topPos + 107, 161, 16,
+                    this.leftPos + 7, this.topPos + 92, 161, 16,
                     Component.translatable("gui.acolyte.recruit.contract_cost"),
-                    btn -> onRecruitClicked(), 0, 248, 0, 264, 161, 16, 176, 360
+                    btn -> onRecruitClicked(), 0, 233, 0, 249, 161, 16, 176, 335
             );
             this.addRenderableWidget(recruitButton);
         } else {
             Button followButton = new TexturedButton(
-                    this.leftPos + 7, this.topPos + 107, 48, 16,
+                    this.leftPos + 7, this.topPos + 92, 48, 16,
                     Component.translatable("gui.acolyte.recruit.follow"),
-                    btn -> onOrderClicked(false), 0, 232, 48, 232, 48, 16, 176, 360);
+                    btn -> onOrderClicked(false), 0, 217, 48, 217, 48, 16, 176, 335);
             this.addRenderableWidget(followButton);
 
             Button stayButton = new TexturedButton(
-                    this.leftPos + 62, this.topPos + 107, 48, 16,
+                    this.leftPos + 62, this.topPos + 92, 48, 16,
                     Component.translatable("gui.acolyte.recruit.stay"),
-                    btn -> onOrderClicked(true), 0, 232, 48, 232, 48, 16, 176, 360
+                    btn -> onOrderClicked(true), 0, 217, 48, 217, 48, 16, 176, 335
             );
             this.addRenderableWidget(stayButton);
 
             Button unrecruitButton = new TexturedButton(
-                    this.leftPos + 117, this.topPos + 107, 48, 16,
+                    this.leftPos + 117, this.topPos + 92, 48, 16,
                     Component.translatable("gui.acolyte.recruit.unrecruit"),
-                    btn -> onUnrecruitClicked(), 0, 232, 48, 232, 48, 16, 176, 360
+                    btn -> onUnrecruitClicked(), 0, 217, 48, 217, 48, 16, 176, 335
             );
             this.addRenderableWidget(unrecruitButton);
         }
@@ -159,14 +158,6 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
         guiGraphics.drawString(this.font,
                 String.format("%.1f", menu.health),
                 sx + 18, y + STAT_HP_Y + 10, COLOR_VALUE, false);
-
-        guiGraphics.drawString(this.font,
-                Component.translatable("gui.acolyte.recruit.stat.attack"),
-                sx + 18, y + STAT_ATK_Y + 1, COLOR_LABEL, false);
-        guiGraphics.drawString(this.font,
-                String.format("%.1f", menu.attackDamage),
-                sx + 18, y + STAT_ATK_Y + 10, COLOR_VALUE, false);
-
         guiGraphics.drawString(this.font,
                 Component.translatable("gui.acolyte.recruit.stat.armor"),
                 sx + 18, y + STAT_ARMOR_Y + 1, COLOR_LABEL, false);
@@ -212,7 +203,7 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
 
     private void renderHireCost(GuiGraphics guiGraphics) {
         int itemX = this.leftPos + 140;
-        int itemY = this.topPos + 107;
+        int itemY = this.topPos + 92;
 
         ItemStack emerald = new ItemStack(Items.EMERALD, menu.recruitCost);
         guiGraphics.renderItem(emerald, itemX, itemY);
@@ -283,8 +274,8 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
             int v = this.isHovered ? texHoverY : texNormalY;
 
             guiGraphics.blit(SCREEN_TEXTURE,
-                    getX(), getY(), width, height,  // destination
-                    u, v, texW, texH,               // source
+                    getX(), getY(), width, height,
+                    u, v, texW, texH,
                     texTotalW, texTotalH);
 
             net.minecraft.client.gui.Font font = net.minecraft.client.Minecraft.getInstance().font;

@@ -4,49 +4,26 @@ import io.redspace.ironsspellbooks.IronsSpellbooks;
 import io.redspace.ironsspellbooks.entity.mobs.IAnimatedAttacker;
 import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.AbstractSpellCastingMob;
 import io.redspace.ironsspellbooks.entity.mobs.goals.SpellBarrageGoal;
-import io.redspace.ironsspellbooks.entity.mobs.goals.melee.AttackAnimationData;
-import io.redspace.ironsspellbooks.entity.mobs.wizards.GenericAnimatedWarlockAttackGoal;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.NotIdioticNavigation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.LookControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.raptorzizi.acolyte.entity.goals.SingleUseSpellGoal;
+import net.raptorzizi.acolyte.entity.goals.WarriorMeleeGoal;
 import software.bernie.geckolib.animation.*;
-
-import java.util.List;
 
 public class HumanWarriorEntity extends HumanEntity implements IAnimatedAttacker {
 
     RawAnimation animationToPlay = null;
     private final AnimationController<HumanWarriorEntity> meleeController = new AnimationController(this, "keeper_animations", 0, this::predicate);
-
-    private static final List<Item> RANDOM_SWORDS = List.of(
-            Items.STONE_SWORD,
-            Items.STONE_SWORD,
-            Items.STONE_SWORD,
-            Items.STONE_AXE,
-            Items.STONE_AXE,
-            Items.IRON_SWORD,
-            Items.IRON_SWORD,
-            Items.IRON_AXE,
-            Items.GOLDEN_SWORD,
-            Items.GOLDEN_AXE
-    );
 
     public HumanWarriorEntity(EntityType<? extends AbstractSpellCastingMob> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -109,13 +86,7 @@ public class HumanWarriorEntity extends HumanEntity implements IAnimatedAttacker
         int aMin = selectedProfile.attackInterval / 2;
         int aMax = aMin + 10;
         WarriorMeleeGoal meleeGoal = new WarriorMeleeGoal(this, 1.0f, aMin, aMax);
-        meleeGoal.setMoveset(List.of(
-                new AttackAnimationData(8,  "simple_sword_lunge_stab",    6),
-                new AttackAnimationData(10, "simple_sword_stab_alternate", 8),
-                new AttackAnimationData(28, "sword_single_horizontal",    12),
-                new AttackAnimationData(43, "sword_double_slash",         13, 29)
-        ));
-        meleeGoal.setComboChance(.4f);
+        meleeGoal.setComboChance(.3f);
         meleeGoal.setMeleeAttackInverval(aMin, aMax);
         meleeGoal.setMeleeMovespeedModifier(1.3f);
 
@@ -124,23 +95,12 @@ public class HumanWarriorEntity extends HumanEntity implements IAnimatedAttacker
 
     public static AttributeSupplier.Builder prepareAttributes() {
         return LivingEntity.createLivingAttributes()
-                .add(Attributes.ATTACK_DAMAGE, 1.0)
+                .add(Attributes.ATTACK_DAMAGE, 0.0)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0)
                 .add(Attributes.MAX_HEALTH, 60.0)
                 .add(Attributes.FOLLOW_RANGE, 24.0)
                 .add(Attributes.ENTITY_INTERACTION_RANGE, 3.5)
                 .add(Attributes.MOVEMENT_SPEED, 0.25);
-    }
-
-    @Override
-    protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty) {
-        if (selectedProfile == null) return;
-
-        if (selectedProfile.mainhand == null) {
-            super.applySlot(EquipmentSlot.MAINHAND, RANDOM_SWORDS.get(pRandom.nextInt(RANDOM_SWORDS.size())));
-        }
-
-        super.populateDefaultEquipmentSlots(pRandom, pDifficulty);
     }
 
     // Animation
@@ -190,38 +150,4 @@ public class HumanWarriorEntity extends HumanEntity implements IAnimatedAttacker
 
     @Override
     protected boolean shouldDespawnInPeaceful() { return true; }
-
-    private class WarriorMeleeGoal extends GenericAnimatedWarlockAttackGoal<HumanWarriorEntity> {
-
-        public WarriorMeleeGoal(HumanWarriorEntity mob, float speedModifier, int minInterval, int maxInterval) {
-            super(mob, speedModifier, minInterval, maxInterval);
-        }
-
-        @Override
-        public void tick() {
-            super.tick();
-            this.wantsToMelee = true;
-        }
-
-        @Override
-        protected void doMovement(double distanceSquared) {
-            if (target == null || target.isDeadOrDying()) {
-                mob.getNavigation().stop();
-                return;
-            }
-            mob.getLookControl().setLookAt(target);
-            float meleeRange = meleeRange();
-            if (distanceSquared > meleeRange * meleeRange) {
-                if (mob.tickCount % 5 == 0) {
-                    mob.getNavigation().moveTo(target, meleeMoveSpeedModifier);
-                }
-            } else {
-                mob.getNavigation().stop();
-            }
-        }
-
-        @Override
-        protected void doSpellAction() {
-        }
-    }
 }

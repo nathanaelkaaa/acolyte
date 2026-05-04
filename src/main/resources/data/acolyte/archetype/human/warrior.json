@@ -1,112 +1,31 @@
 {
   "profiles": [
     {
-      "weight": 3,
-      "tier": 1
-    },
-    {
       "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:burning_dash"
+      "tier": 1,
+      "stats": {
+        "max_health": 40.0,
+        "armor": 0.0,
+        "attack_interval": 20
+      },
+      "equipment": {
+        "mainhand": "minecraft:iron_sword",
+        "chest": "minecraft:leather_chestplate",
+        "feet": "minecraft:leather_boots"
       }
     },
     {
       "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:volt_strike"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:blood_step"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:frost_step"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "single_use_spell": "irons_spellbooks:teleport"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:flaming_strike"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:blood_slash"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:gust"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:shockwave"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "barrage_spell": "irons_spellbooks:frostwave"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "single_use_spell": "irons_spellbooks:echoing_strike"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "single_use_spell": "irons_spellbooks:slow"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "single_use_spell": "irons_spellbooks:evasion"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "single_use_spell": "irons_spellbooks:oakskin"
-      }
-    },
-    {
-      "weight": 1,
-      "tier": 2,
-      "spells": {
-        "single_use_spell": "irons_spellbooks:spider_aspect"
+      "tier": 1,
+      "stats": {
+        "max_health": 40.0,
+        "armor": 0.0,
+        "attack_interval": 40
+      },
+      "equipment": {
+        "mainhand": "minecraft:iron_axe",
+        "chest": "minecraft:leather_chestplate",
+        "feet": "minecraft:leather_boots"
       }
     }
   ]

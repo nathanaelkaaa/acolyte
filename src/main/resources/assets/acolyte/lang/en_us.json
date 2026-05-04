@@ -65,7 +65,7 @@
   "gui.acolyte.recruit.hired": "%s hired %s",
   "gui.acolyte.recruit.unrecruit": "Fire",
   "gui.acolyte.recruit.contract_expired": "%s contract expired.",
-  "gui.acolyte.recruit.contract_companion_died": "%s faded from this world.",
+  "gui.acolyte.recruit.companion_died": "%s faded from this world.",
   "gui.acolyte.recruit.follow":"Follow",
   "gui.acolyte.recruit.stay":"Stay",
   "gui.acolyte.recruit.stat.hp": "HP",

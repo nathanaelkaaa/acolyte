@@ -8,12 +8,8 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -80,15 +76,6 @@ public class DemonArcherEntity extends DemonEntity implements RangedAttackMob {
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
     }
 
-    @Override
-    protected void populateDefaultEquipmentSlots(RandomSource pRandom, DifficultyInstance pDifficulty) {
-        super.populateDefaultEquipmentSlots(pRandom, pDifficulty);
-        if (selectedProfile == null || selectedProfile.mainhand == null) {
-            this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
-            this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
-        }
-    }
-
     private PlayState bowPredicate(AnimationState<DemonArcherEntity> state) {
         boolean releasing = this.entityData.get(IS_RELEASING_BOW);
         boolean charging  = this.entityData.get(IS_CHARGING_BOW);
@@ -113,13 +100,15 @@ public class DemonArcherEntity extends DemonEntity implements RangedAttackMob {
     public void performRangedAttack(LivingEntity target, float power) {
         ItemStack arrow = new ItemStack(Items.ARROW);
         AbstractArrow arrowEntity = ProjectileUtil.getMobArrow(this, arrow, power, null);
+        arrowEntity.setBaseDamage(selectedProfile.getStatOverride("attack_damage", 6.0)/2);
 
         double dx = target.getX() - this.getX();
         double dy = target.getY(0.3333) - arrowEntity.getY();
         double dz = target.getZ() - this.getZ();
         double dist = Math.sqrt(dx * dx + dz * dz);
+        double arc = Math.min(dist * 0.2, target.getBbHeight() * 0.6);
 
-        arrowEntity.shoot(dx, dy + dist * 0.2, dz, 1.6f, 14 - this.level().getDifficulty().getId() * 4f);
+        arrowEntity.shoot(dx, dy + arc, dz, 2f, 14 - this.level().getDifficulty().getId() * 4f);
         this.level().addFreshEntity(arrowEntity);
         this.playSound(SoundEvents.ARROW_SHOOT, 1.0f,
                 1.0f / (this.getRandom().nextFloat() * 0.4f + 0.8f));
@@ -131,8 +120,7 @@ public class DemonArcherEntity extends DemonEntity implements RangedAttackMob {
 
     public static AttributeSupplier.Builder prepareAttributes() {
         return LivingEntity.createLivingAttributes()
-                .add(Attributes.ATTACK_DAMAGE, 2.0)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.0)
+                .add(Attributes.ATTACK_DAMAGE, 0.0)
                 .add(Attributes.MAX_HEALTH, 40.0)
                 .add(Attributes.FOLLOW_RANGE, 32.0)
                 .add(Attributes.MOVEMENT_SPEED, 0.25);
