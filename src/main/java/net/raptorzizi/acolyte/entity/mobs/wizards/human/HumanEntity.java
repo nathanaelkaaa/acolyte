@@ -138,16 +138,6 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty,
                                         MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
-        AcolyteMod.LOGGER.info("[HumanEntity] finalizeSpawn called — id={}, reason={}, profile_before={}",
-                this.getId(),
-                pReason,
-                selectedProfile != null ? selectedProfile.profileId : "NULL");
-        AcolyteMod.LOGGER.info("[HumanEntity] call stack: {}",
-                java.util.Arrays.stream(Thread.currentThread().getStackTrace())
-                        .skip(1)
-                        .limit(10)
-                        .map(StackTraceElement::toString)
-                        .collect(java.util.stream.Collectors.joining(" -> ")));
         captureBaseAttributes();
         RandomSource random = Utils.random;
         this.setSkinVariant(random.nextInt(getSkinCount()));
@@ -226,9 +216,9 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
         if (selectedProfile == null) return 1;
 
         return switch (selectedProfile.tier) {
-            case 2 -> 12;
-            case 3 -> 15;
-            default -> 8;
+            case 2 -> 7;
+            case 3 -> 9;
+            default -> 5;
         };
     }
 

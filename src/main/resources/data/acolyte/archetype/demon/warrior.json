@@ -1,7 +1,7 @@
 {
   "profiles": [
     {
-      "weight": 1,
+      "weight": 5,
       "tier": 1,
       "stats": {
         "max_health": 40.0,
@@ -13,15 +13,43 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 5,
       "tier": 1,
       "stats": {
-        "max_health": 40.0,
+        "max_health": 30.0,
         "armor": 0.0,
         "attack_interval": 50
       },
       "equipment": {
         "mainhand": "minecraft:golden_axe"
+      }
+    },
+    {
+      "weight": 3,
+      "tier": 2,
+      "stats": {
+        "max_health": 60.0,
+        "armor": 0.0,
+        "attack_interval": 20,
+        "attack_damage": 1.5
+      },
+      "equipment": {
+        "mainhand": "minecraft:golden_sword",
+        "chest": "minecraft:chainmail_chestplate"
+      }
+    },
+    {
+      "weight": 3,
+      "tier": 2,
+      "stats": {
+        "max_health": 60.0,
+        "armor": 0.0,
+        "attack_interval": 40,
+        "attack_damage": 1.5
+      },
+      "equipment": {
+        "mainhand": "minecraft:golden_axe",
+        "chest": "minecraft:chainmail_chestplate"
       }
     }
   ]

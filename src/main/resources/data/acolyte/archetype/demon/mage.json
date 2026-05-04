@@ -1,7 +1,7 @@
 {
   "profiles": [
     {
-      "weight": 1,
+      "weight": 3,
       "tier": 1,
       "stats": {
         "max_health": 20.0,
@@ -20,7 +20,7 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 3,
       "tier": 1,
       "stats": {
         "max_health": 20.0,
@@ -74,6 +74,86 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:copper_spell_book"
+      }
+    },
+    {
+      "weight": 2,
+      "tier": 2,
+      "stats": {
+        "max_health": 30.0,
+        "armor": 2.0,
+        "attack_interval": 30,
+        "spells_quality": 0.3
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:ray_of_siphoning",
+        "attack_spells": ["irons_spellbooks:blood_needles"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:iron_spell_book"
+      }
+    },
+    {
+      "weight": 2,
+      "tier": 2,
+      "stats": {
+        "max_health": 30.0,
+        "armor": 2.0,
+        "attack_interval": 30,
+        "spells_quality": 0.3
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:chain_lightning",
+        "attack_spells": ["irons_spellbooks:ball_lightning"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:iron_spell_book"
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 2,
+      "stats": {
+        "max_health": 30.0,
+        "armor": 2.0,
+        "attack_interval": 30,
+        "spells_quality": 0.3
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:wisp",
+        "attack_spells": ["irons_spellbooks:guiding_bolt"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:iron_spell_book"
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 2,
+      "stats": {
+        "max_health": 30.0,
+        "armor": 2.0,
+        "attack_interval": 50,
+        "spells_quality": 0.3
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:root",
+        "attack_spells": ["irons_spellbooks:poison_breath"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:iron_spell_book"
       }
     }
   ]

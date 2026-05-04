@@ -1,39 +1,42 @@
 {
   "profiles": [
     {
-      "weight": 2,
-      "tier": 3,
-      "name": "Exemple",
-      "skin": "acolyte:textures/entity/exemple.png",
-      "equipment": {
-        "mainhand": "minecraft:air",
-        "offhand": "irons_spellbooks:air",
+      "weight": 2, // probability to spawn
+      "tier": 3, // tier meaning rarety/power of the character, change the frame on recruit screen (tier 1-2-3)
+      "name": "Exemple", // name of the character, visible in recruit screen
+      "skin": "acolyte:textures/entity/exemple.png", // if no skin spawn with classic character skin
+      "equipment": { // can be empty
+        "mainhand": "minecraft:air", // for a mod : "mod_name:item_name"
         "head": "minecraft:iron_helmet",
         "chest": "minecraft:iron_chestplate",
         "legs": "minecraft:iron_leggings",
         "feet": "minecraft:iron_boots"
       },
       "stats": {
-        "xp_reward": 8000,
-        "attack_damage": 3.0,
-        "attack_knockback": 1.0,
-        "max_health": 50.0,
-        "movement_speed": 0.25,
-        "follow_range": 24.0,
-        "armor": 2.0,
-        "attack_interval": 25,
-        "spells_quality": 0.4,
-        "barrage_attack_interval": 150,
-        "barrage_projectile_count": 4,
-        "single_use_spell_delay": 200
+        "xp_reward": 15, // exemple : zombie = 5 pyromancer= 15 ender_dragon= 12000
+        "attack_damage": 3.0, // damage depend on the archetype :
+        //warrior dmg = sword + attack_damage
+        //archer dmg = attack_damage/2 * velocity(~2)
+        //mage dmg = spell_damage (attack_damage useless)
+        "attack_knockback": 1.0, //knockback
+        "max_health": 50.0, //2.0 = 1 heart
+        "movement_speed": 0.25, //player ~ 0.3
+        "follow_range": 24.0, //can target at this range
+        "armor": 2.0, //additional armor (equipment armor + armor)
+        "attack_interval": 25, //delay between every attack
+        "spells_quality": 0.4, //between 0.1 and 0.8
+        "barrage_attack_interval": 150, //delay between every barrage attack
+        "barrage_projectile_count": 4, //when using barrage spell how much time the spell gonna be used (default : 1)
+        "single_use_spell_delay": 200 // delay before first single use spell cast
       },
       "spells": {
-        "single_use_spell": "irons_spellbooks:summon_vex",
-        "barrage_spell": "irons_spellbooks:gust",
-        "attack_spells": ["acolyte:zoltraak"],
-        "defense_spells": ["irons_spellbooks:mana_shield"],
-        "mobility_spells": [],
-        "utility_spells": []
+        "single_use_spell": "irons_spellbooks:summon_vex",// only can be cast 1 time in a fight (summon,big spell,buff)
+        "barrage_spell": "irons_spellbooks:flaming_barrage",// spell with a longer ineterval than classic attack spell (medium cooldown spells, melee spell, multi projectile spell)
+        //below only mage
+        "attack_spells": ["irons_spellbooks:firebolt"], // short interval spell (spell with low/no cooldown)
+        "defense_spells": ["irons_spellbooks:gust"], // spell used when in danger or too close (defense spells, knockbach spells, short range spell)
+        "mobility_spells": ["irons_spellbooks:frost_step"],// move spell (dash,tp)
+        "utility_spells": ["irons_spellbooks:fortify"]// support spell (heal,buff)
       }
     }
   ]

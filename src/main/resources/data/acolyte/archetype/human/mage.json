@@ -145,11 +145,11 @@
       "stats": {
         "max_health": 45.0,
         "armor": 4.0,
-        "attack_interval": 25,
+        "attack_interval": 50,
         "spells_quality": 0.6
       },
       "spells": {
-        "barrage_spell": "irons_spellbooks:acid_orb",
+        "single_use_spell": "irons_spellbooks:root",
         "attack_spells": ["irons_spellbooks:poison_breath"],
         "defense_spells": [],
         "mobility_spells": [],

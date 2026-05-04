@@ -1,7 +1,7 @@
 {
   "profiles": [
     {
-      "weight": 1,
+      "weight": 5,
       "tier": 1,
       "stats": {
         "max_health": 20.0,
@@ -10,11 +10,12 @@
         "attack_interval": 20
       },
       "equipment": {
-        "mainhand": "minecraft:bow"
+        "mainhand": "minecraft:bow",
+        "chest": "acolyte:leather_quiver"
       }
     },
     {
-      "weight": 1,
+      "weight": 5,
       "tier": 1,
       "stats": {
         "max_health": 20.0,
@@ -23,7 +24,38 @@
         "attack_interval": 20
       },
       "equipment": {
-        "mainhand": "minecraft:crossbow"
+        "mainhand": "minecraft:crossbow",
+        "chest": "acolyte:leather_quiver"
+      }
+    },
+    {
+      "weight": 3,
+      "tier": 2,
+      "stats": {
+        "max_health": 35.0,
+        "attack_damage": 8.0,
+        "armor": 2.0,
+        "attack_interval": 14
+      },
+      "equipment": {
+        "mainhand": "minecraft:bow",
+        "head": "acolyte:archer_helmet",
+        "chest": "acolyte:iron_quiver"
+      }
+    },
+    {
+      "weight": 3,
+      "tier": 2,
+      "stats": {
+        "max_health": 35.0,
+        "attack_damage": 8.0,
+        "armor": 2.0,
+        "attack_interval": 14
+      },
+      "equipment": {
+        "mainhand": "minecraft:crossbow",
+        "head": "acolyte:archer_helmet",
+        "chest": "acolyte:iron_quiver"
       }
     }
   ]

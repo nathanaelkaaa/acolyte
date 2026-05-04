@@ -18,7 +18,7 @@ public class ModCreativeModeTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MATERIALS_TAB = CREATIVE_MODE_TAB.register("spellbook_materials",
             () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup." + AcolyteMod.MOD_ID + ".creative_tab"))
-            .icon(() -> new ItemStack(ModItemsRegistry.DEMON_HORNS.getFirst()))
+            .icon(() -> new ItemStack(ModItemsRegistry.DEMON_HORN.get()))
             .displayItems((enabledFeatures, entries) -> {
                 /*entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_OAK.get());
                 entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_COBBLESTONE.get());
@@ -28,12 +28,10 @@ public class ModCreativeModeTabs {
                 entries.accept(ModItemsRegistry.ARCHER_HELMET.get());
                 ModItemsRegistry.DEMON_HORNS.forEach(horn -> entries.accept(horn.get()));
                 ModItemsRegistry.QUIVERS.forEach(quiver -> entries.accept(quiver.get()));
-                 */
-
                 entries.accept(ModItemsRegistry.BLACK_WIZARD_HELMET.get());
                 entries.accept(ModItemsRegistry.BLACK_WIZARD_CHESTPLATE.get());
                 entries.accept(ModItemsRegistry.BLACK_WIZARD_LEGGINGS.get());
-                entries.accept(ModItemsRegistry.BLACK_WIZARD_BOOTS.get());
+                entries.accept(ModItemsRegistry.BLACK_WIZARD_BOOTS.get());*/
 
                 entries.accept(ModItemsRegistry.DEMON_HORN_0.get());
                 entries.accept(ModItemsRegistry.DEMON_HORN.get());

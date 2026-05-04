@@ -35,9 +35,14 @@
   "item.acolyte.dark_horn": "Dark Horn",
 
   "item.acolyte.demon_horns_0": "Demon Horns",
-  "item.acolyte.demon_horns_1": "Demon Horns",
-  "item.acolyte.demon_horns_2": "Demon Horns",
-  "item.acolyte.demon_horns_3": "Demon Horns",
+  "item.acolyte.demon_horns_1": "Demon Horns Cosmetic 1",
+  "item.acolyte.demon_horns_2": "Demon Horns Cosmetic 2",
+  "item.acolyte.demon_horns_3": "Demon Horns Cosmetic 3",
+  "item.acolyte.archer_helmet": "Archer Helmet Cosmetic",
+  "item.acolyte.black_wizard_helmet": "Wizard Helmet Cosmetic",
+  "item.acolyte.black_wizard_chestplate": "Wizard Chestplate Cosmetic",
+  "item.acolyte.black_wizard_leggings": "Wizard Leggings Cosmetic",
+  "item.acolyte.black_wizard_boots": "Wizard Boots Cosmetic",
 
   "item.acolyte.lieutenant_spawn_egg": "Lieutenant Spawn Egg",
   "item.acolyte.horn_merchant_spawn_egg": "Horn Merchant Spawn Egg",

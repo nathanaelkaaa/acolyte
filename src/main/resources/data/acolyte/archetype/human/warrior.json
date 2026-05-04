@@ -11,6 +11,7 @@
       "equipment": {
         "mainhand": "minecraft:iron_sword",
         "chest": "minecraft:leather_chestplate",
+        "legs": "minecraft:leather_leggings",
         "feet": "minecraft:leather_boots"
       }
     },
@@ -25,6 +26,7 @@
       "equipment": {
         "mainhand": "minecraft:iron_axe",
         "chest": "minecraft:leather_chestplate",
+        "legs": "minecraft:leather_leggings",
         "feet": "minecraft:leather_boots"
       }
     },
@@ -61,12 +63,13 @@
       }
     },
     {
-      "weight": 3,
+      "weight": 1,
       "tier": 3,
       "stats": {
         "max_health": 80.0,
         "armor": 0.0,
         "attack_interval": 10,
+        "barrage_attack_interval": 30,
         "attack_damage": 4.0
       },
       "equipment": {
@@ -75,15 +78,40 @@
         "chest": "minecraft:iron_chestplate",
         "legs": "minecraft:chainmail_leggings",
         "feet": "minecraft:iron_boots"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:flaming_strike"
       }
     },
     {
-      "weight": 3,
+      "weight": 1,
+      "tier": 3,
+      "stats": {
+        "max_health": 80.0,
+        "armor": 0.0,
+        "attack_interval": 10,
+        "barrage_attack_interval": 30,
+        "attack_damage": 4.0
+      },
+      "equipment": {
+        "mainhand": "minecraft:iron_sword",
+        "head": "minecraft:iron_helmet",
+        "chest": "minecraft:iron_chestplate",
+        "legs": "minecraft:chainmail_leggings",
+        "feet": "minecraft:iron_boots"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:throw"
+      }
+    },
+    {
+      "weight": 1,
       "tier": 3,
       "stats": {
         "max_health": 80.0,
         "armor": 0.0,
         "attack_interval": 20,
+        "barrage_attack_interval": 50,
         "attack_damage": 4.0
       },
       "equipment": {
@@ -92,6 +120,9 @@
         "chest": "minecraft:iron_chestplate",
         "legs": "minecraft:chainmail_leggings",
         "feet": "minecraft:iron_boots"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:frost_step"
       }
     }
   ]
