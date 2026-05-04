@@ -16,7 +16,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.mobs.wizards.demon.DemonSpawner;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanSpawner;
+import net.raptorzizi.acolyte.item.armor.ArcherHelmetItem;
+import net.raptorzizi.acolyte.item.armor.BlackWizardArmorItem;
 import net.raptorzizi.acolyte.item.armor.DemonHornsItem;
+import net.raptorzizi.acolyte.item.armor.QuiverItem;
 import net.raptorzizi.acolyte.item.consumables.DarkHornItem;
 import net.raptorzizi.acolyte.item.consumables.DemonHornItem;
 
@@ -35,11 +38,28 @@ public class ModItemsRegistry {
      * Armor
      */
 
+    public static final DeferredHolder<Item, Item> BLACK_WIZARD_HELMET = ITEMS.register("black_wizard_helmet", () -> new BlackWizardArmorItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON),"black_wizard_armor", "black_wizard"));
+    public static final DeferredHolder<Item, Item> BLACK_WIZARD_CHESTPLATE = ITEMS.register("black_wizard_chestplate", () -> new BlackWizardArmorItem(ArmorItem.Type.CHESTPLATE, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON),"black_wizard_armor", "black_wizard"));
+    public static final DeferredHolder<Item, Item> BLACK_WIZARD_LEGGINGS = ITEMS.register("black_wizard_leggings", () -> new BlackWizardArmorItem(ArmorItem.Type.LEGGINGS, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON),"black_wizard_armor", "black_wizard"));
+    public static final DeferredHolder<Item, Item> BLACK_WIZARD_BOOTS = ITEMS.register("black_wizard_boots", () -> new BlackWizardArmorItem(ArmorItem.Type.BOOTS, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON),"black_wizard_armor", "black_wizard"));
+
+
+    public static final DeferredItem<Item> ARCHER_HELMET = ITEMS.register("archer_helmet",
+            () -> new ArcherHelmetItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "archer_helmet", "archer_helmet"));
+
+    public static final DeferredItem<Item> DEMON_HORN_0 = ITEMS.register("demon_horns_0",
+            () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_0", "demon_horns_0"));
+
     public static final List<DeferredHolder<Item, Item>> DEMON_HORNS = List.of(
-            ITEMS.register("demon_horns_0", () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_0", "demon_horns_0")),
             ITEMS.register("demon_horns_1", () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_1", "demon_horns_1")),
             ITEMS.register("demon_horns_2", () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_2", "demon_horns_2")),
             ITEMS.register("demon_horns_3", () -> new DemonHornsItem(ArmorItem.Type.HELMET, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "demon_horns_3", "demon_horns_3"))
+    );
+
+    public static final List<DeferredHolder<Item, Item>> QUIVERS = List.of(
+            ITEMS.register("leather_quiver", () -> new QuiverItem(ArmorItem.Type.CHESTPLATE, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "quiver", "leather_quiver")),
+            ITEMS.register("iron_quiver", () -> new QuiverItem(ArmorItem.Type.CHESTPLATE, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "quiver", "iron_quiver")),
+            ITEMS.register("gold_quiver", () -> new QuiverItem(ArmorItem.Type.CHESTPLATE, ItemPropertiesHelper.hidden(1).rarity(Rarity.COMMON), "quiver", "gold_quiver"))
     );
 
     /**

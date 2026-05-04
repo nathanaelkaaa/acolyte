@@ -2,12 +2,10 @@ package net.raptorzizi.acolyte.block.tavern_spawn_marker;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanMageEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanSpawner;
 import net.raptorzizi.acolyte.registries.ModBlockEntityRegistry;
@@ -43,23 +41,7 @@ public class TavernSpawnMarkerBlockEntity extends BlockEntity {
             BlockPos spawnPos = findValidSpawnPos(serverLevel, pos);
             if (spawnPos == null) return;
 
-            HumanEntity human = HumanSpawner.spawnRandom(serverLevel, spawnPos);
-            if (human == null) return;
-
-            human.moveTo(
-                    spawnPos.getX() + 0.5,
-                    spawnPos.getY(),
-                    spawnPos.getZ() + 0.5,
-                    serverLevel.random.nextFloat() * 360f,
-                    0
-            );
-            human.finalizeSpawn(
-                    serverLevel,
-                    serverLevel.getCurrentDifficultyAt(spawnPos),
-                    MobSpawnType.STRUCTURE,
-                    null
-            );
-            serverLevel.addFreshEntity(human);
+            HumanSpawner.spawnRandom(serverLevel, spawnPos);
         }
     }
 

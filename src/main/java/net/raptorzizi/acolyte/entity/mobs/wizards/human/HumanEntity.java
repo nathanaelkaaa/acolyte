@@ -7,6 +7,7 @@ import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.Abstra
 import io.redspace.ironsspellbooks.entity.mobs.goals.*;
 import io.redspace.ironsspellbooks.entity.mobs.goals.PatrolNearLocationGoal;
 import io.redspace.ironsspellbooks.entity.mobs.goals.WizardRecoverGoal;
+import io.redspace.ironsspellbooks.entity.mobs.wizards.fire_boss.NotIdioticNavigation;
 import io.redspace.ironsspellbooks.entity.mobs.wizards.priest.PriestEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,7 +30,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.*;
-import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
@@ -39,8 +39,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.pathfinder.PathFinder;
-import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
 import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.goals.GenericStayOrderGoal;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeLoader;
@@ -140,6 +138,16 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
     @Override
     public SpawnGroupData finalizeSpawn(ServerLevelAccessor pLevel, DifficultyInstance pDifficulty,
                                         MobSpawnType pReason, @Nullable SpawnGroupData pSpawnData) {
+        AcolyteMod.LOGGER.info("[HumanEntity] finalizeSpawn called — id={}, reason={}, profile_before={}",
+                this.getId(),
+                pReason,
+                selectedProfile != null ? selectedProfile.profileId : "NULL");
+        AcolyteMod.LOGGER.info("[HumanEntity] call stack: {}",
+                java.util.Arrays.stream(Thread.currentThread().getStackTrace())
+                        .skip(1)
+                        .limit(10)
+                        .map(StackTraceElement::toString)
+                        .collect(java.util.stream.Collectors.joining(" -> ")));
         captureBaseAttributes();
         RandomSource random = Utils.random;
         this.setSkinVariant(random.nextInt(getSkinCount()));
@@ -280,15 +288,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
 
     @Override
     protected PathNavigation createNavigation(Level pLevel) {
-        return new GroundPathNavigation(this, pLevel) {
-            @Override
-            protected PathFinder createPathFinder(int pMaxVisitedNodes) {
-                this.nodeEvaluator = new WalkNodeEvaluator();
-                this.nodeEvaluator.setCanPassDoors(true);
-                this.nodeEvaluator.setCanOpenDoors(true);
-                return new PathFinder(this.nodeEvaluator, pMaxVisitedNodes);
-            }
-        };
+        return new NotIdioticNavigation(this, pLevel);
     }
 
     @Override

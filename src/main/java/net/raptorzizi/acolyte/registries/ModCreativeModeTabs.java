@@ -24,8 +24,18 @@ public class ModCreativeModeTabs {
                 entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_COBBLESTONE.get());
                 entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_ACACIA.get());
                 entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_SPRUCE.get());
-                entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_SANDSTONE.get());*/
+                entries.accept(ModBlocksRegistry.TAVERN_SPAWN_MARKER_SANDSTONE.get());
+                entries.accept(ModItemsRegistry.ARCHER_HELMET.get());
                 ModItemsRegistry.DEMON_HORNS.forEach(horn -> entries.accept(horn.get()));
+                ModItemsRegistry.QUIVERS.forEach(quiver -> entries.accept(quiver.get()));
+                 */
+
+                entries.accept(ModItemsRegistry.BLACK_WIZARD_HELMET.get());
+                entries.accept(ModItemsRegistry.BLACK_WIZARD_CHESTPLATE.get());
+                entries.accept(ModItemsRegistry.BLACK_WIZARD_LEGGINGS.get());
+                entries.accept(ModItemsRegistry.BLACK_WIZARD_BOOTS.get());
+
+                entries.accept(ModItemsRegistry.DEMON_HORN_0.get());
                 entries.accept(ModItemsRegistry.DEMON_HORN.get());
                 entries.accept(ModItemsRegistry.DARK_HORN.get());
                 entries.accept(ModItemsRegistry.DEMON_MAGE_SPAWN_EGG.get());

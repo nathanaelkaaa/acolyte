@@ -1,7 +1,7 @@
 {
   "profiles": [
     {
-      "weight": 1,
+      "weight": 5,
       "tier": 1,
       "stats": {
         "max_health": 40.0,
@@ -15,7 +15,7 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 5,
       "tier": 1,
       "stats": {
         "max_health": 40.0,
@@ -26,6 +26,72 @@
         "mainhand": "minecraft:iron_axe",
         "chest": "minecraft:leather_chestplate",
         "feet": "minecraft:leather_boots"
+      }
+    },
+    {
+      "weight": 3,
+      "tier": 2,
+      "stats": {
+        "max_health": 60.0,
+        "armor": 0.0,
+        "attack_interval": 15,
+        "attack_damage": 2.0
+      },
+      "equipment": {
+        "mainhand": "minecraft:iron_sword",
+        "chest": "minecraft:chainmail_chestplate",
+        "legs": "minecraft:chainmail_leggings",
+        "feet": "minecraft:chainmail_boots"
+      }
+    },
+    {
+      "weight": 3,
+      "tier": 2,
+      "stats": {
+        "max_health": 60.0,
+        "armor": 0.0,
+        "attack_interval": 30,
+        "attack_damage": 2.0
+      },
+      "equipment": {
+        "mainhand": "minecraft:iron_axe",
+        "chest": "minecraft:chainmail_chestplate",
+        "legs": "minecraft:chainmail_leggings",
+        "feet": "minecraft:chainmail_boots"
+      }
+    },
+    {
+      "weight": 3,
+      "tier": 3,
+      "stats": {
+        "max_health": 80.0,
+        "armor": 0.0,
+        "attack_interval": 10,
+        "attack_damage": 4.0
+      },
+      "equipment": {
+        "mainhand": "minecraft:iron_sword",
+        "head": "minecraft:iron_helmet",
+        "chest": "minecraft:iron_chestplate",
+        "legs": "minecraft:chainmail_leggings",
+        "feet": "minecraft:iron_boots"
+      }
+    },
+    {
+      "weight": 3,
+      "tier": 3,
+      "stats": {
+        "max_health": 80.0,
+        "armor": 0.0,
+        "attack_interval": 20,
+        "attack_damage": 4.0
+      },
+      "equipment": {
+        "mainhand": "minecraft:iron_axe",
+        "head": "minecraft:iron_helmet",
+        "chest": "minecraft:iron_chestplate",
+        "legs": "minecraft:chainmail_leggings",
+        "feet": "minecraft:iron_boots"
       }
     }
   ]

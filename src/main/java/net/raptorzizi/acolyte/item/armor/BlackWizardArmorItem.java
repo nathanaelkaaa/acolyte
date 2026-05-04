@@ -1,25 +1,20 @@
 package net.raptorzizi.acolyte.item.armor;
 
-import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
 import io.redspace.ironsspellbooks.entity.armor.GenericCustomArmorRenderer;
 import io.redspace.ironsspellbooks.item.armor.ExtendedArmorItem;
-import io.redspace.ironsspellbooks.item.weapons.AttributeContainer;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.raptorzizi.acolyte.entity.armor.CosmeticModel;
 import net.raptorzizi.acolyte.registries.ModArmorMaterialRegistry;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
-public class DemonHornsItem extends ExtendedArmorItem {
+public class BlackWizardArmorItem extends ExtendedArmorItem {
 
     private final String modelName;
     private final String textureName;
 
-    public DemonHornsItem(Type slot, Properties settings, String modelName, String textureName) {
-        super(ModArmorMaterialRegistry.COSMETIC, slot, settings,
-                new AttributeContainer(AttributeRegistry.MAX_MANA, 125, AttributeModifier.Operation.ADD_VALUE),
-                new AttributeContainer(AttributeRegistry.MANA_REGEN, 0.35, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+    public BlackWizardArmorItem(Type slot, Properties settings, String modelName, String textureName) {
+        super(ModArmorMaterialRegistry.COSMETIC, slot, settings);
 
         this.modelName = modelName;
         this.textureName = textureName;

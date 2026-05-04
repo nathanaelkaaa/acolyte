@@ -6,12 +6,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.raptorzizi.acolyte.AcolyteMod;
 import software.bernie.geckolib.model.GeoModel;
 
-public class DemonHornModel extends GeoModel<ExtendedArmorItem> {
+public class CosmeticModel extends GeoModel<ExtendedArmorItem> {
 
     private final ResourceLocation model;
     private final ResourceLocation texture;
 
-    public DemonHornModel(String modelName, String textureName) {
+    public CosmeticModel(String modelName, String textureName) {
         this.model = ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "geo/" + modelName + ".geo.json");
         this.texture = ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID, "textures/models/armor/" + textureName + ".png");
     }

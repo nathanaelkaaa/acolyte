@@ -1,7 +1,7 @@
 {
   "profiles": [
     {
-      "weight": 1,
+      "weight": 3,
       "tier": 1,
       "stats": {
         "max_health": 30.0,
@@ -20,26 +20,7 @@
       }
     },
     {
-      "weight": 1,
-      "tier": 1,
-      "stats": {
-        "max_health": 30.0,
-        "armor": 0.0,
-        "attack_interval": 25,
-        "spells_quality": 0.4
-      },
-      "spells": {
-        "attack_spells": ["irons_spellbooks:icicle"],
-        "defense_spells": [],
-        "mobility_spells": [],
-        "utility_spells": []
-      },
-      "equipment": {
-        "mainhand": "irons_spellbooks:copper_spell_book"
-      }
-    },
-    {
-      "weight": 1,
+      "weight": 3,
       "tier": 1,
       "stats": {
         "max_health": 30.0,
@@ -58,7 +39,26 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 2,
+      "tier": 1,
+      "stats": {
+        "max_health": 30.0,
+        "armor": 0.0,
+        "attack_interval": 25,
+        "spells_quality": 0.4
+      },
+      "spells": {
+        "attack_spells": ["irons_spellbooks:icicle"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:copper_spell_book"
+      }
+    },
+    {
+      "weight": 2,
       "tier": 1,
       "stats": {
         "max_health": 30.0,
@@ -74,6 +74,164 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:copper_spell_book"
+      }
+    },
+    {
+      "weight": 2,
+      "tier": 2,
+      "stats": {
+        "max_health": 45.0,
+        "armor": 4.0,
+        "attack_interval": 25,
+        "spells_quality": 0.6
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:ray_of_siphoning",
+        "attack_spells": ["irons_spellbooks:blood_needles"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:iron_spell_book",
+        "head": "acolyte:black_wizard_helmet"
+      }
+    },
+    {
+      "weight": 2,
+      "tier": 2,
+      "stats": {
+        "max_health": 45.0,
+        "armor": 4.0,
+        "attack_interval": 25,
+        "spells_quality": 0.6
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:chain_lightning",
+        "attack_spells": ["irons_spellbooks:ball_lightning"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:iron_spell_book",
+        "chest": "acolyte:black_wizard_chestplate"
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 2,
+      "stats": {
+        "max_health": 45.0,
+        "armor": 4.0,
+        "attack_interval": 25,
+        "spells_quality": 0.6
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:wisp",
+        "attack_spells": ["irons_spellbooks:guiding_bolt"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:iron_spell_book",
+        "head": "acolyte:black_wizard_helmet"
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 2,
+      "stats": {
+        "max_health": 45.0,
+        "armor": 4.0,
+        "attack_interval": 25,
+        "spells_quality": 0.6
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:acid_orb",
+        "attack_spells": ["irons_spellbooks:poison_breath"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:iron_spell_book",
+        "chest": "acolyte:black_wizard_chestplate"
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 3,
+      "stats": {
+        "max_health": 60.0,
+        "armor": 5.0,
+        "attack_interval": 25,
+        "spells_quality": 0.7
+      },
+      "spells": {
+        "single_use_spell": "irons_spellbooks:summon_swords",
+        "attack_spells": ["irons_spellbooks:wither_skull"],
+        "defense_spells": [],
+        "mobility_spells": ["irons_spellbooks:teleport"],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:gold_spell_book",
+        "head": "irons_spellbooks:shadowwalker_helmet",
+        "chest": "acolyte:black_wizard_chestplate",
+        "legs": "acolyte:black_wizard_leggings",
+        "feet": "acolyte:black_wizard_boots"
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 3,
+      "stats": {
+        "max_health": 60.0,
+        "armor": 0.0,
+        "attack_interval": 25,
+        "spells_quality": 0.7
+      },
+      "spells": {
+        "single_use_spell": "irons_spellbooks:summon_vex",
+        "barrage_spell": "irons_spellbooks:arrow_volley",
+        "attack_spells": ["irons_spellbooks:guiding_bolt"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:gold_spell_book",
+        "head": "acolyte:black_wizard_helmet",
+        "chest": "irons_spellbooks:archevoker_chestplate",
+        "legs": "acolyte:black_wizard_leggings",
+        "feet": "acolyte:black_wizard_boots"
+      }
+    },
+    {
+      "weight": 1,
+      "tier": 3,
+      "stats": {
+        "max_health": 60.0,
+        "armor": 5.0,
+        "attack_interval": 25,
+        "spells_quality": 0.7
+      },
+      "spells": {
+        "single_use_spell": "irons_spellbooks:raise_dead",
+        "barrage_spell": "irons_spellbooks:blood_slash",
+        "attack_spells": ["irons_spellbooks:acupuncture"],
+        "defense_spells": [],
+        "mobility_spells": [],
+        "utility_spells": []
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:gold_spell_book",
+        "head": "irons_spellbooks:cultist_helmet",
+        "chest": "acolyte:black_wizard_chestplate",
+        "legs": "acolyte:black_wizard_leggings",
+        "feet": "acolyte:black_wizard_boots"
       }
     }
   ]
