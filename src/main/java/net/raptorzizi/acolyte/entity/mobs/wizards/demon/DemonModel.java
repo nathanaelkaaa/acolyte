@@ -13,4 +13,12 @@ public class DemonModel extends AbstractSpellCastingMobModel {
         }
         return DemonEntity.FALLBACK_TEXTURE;
     }
+
+    @Override
+    public ResourceLocation getAnimationResource(AbstractSpellCastingMob animatable) {
+        if (animatable instanceof DemonEntity demon) {
+            return demon.currentAnimFile;
+        }
+        return AbstractSpellCastingMob.animationInstantCast;
+    }
 }

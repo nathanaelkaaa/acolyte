@@ -1,5 +1,6 @@
 package net.raptorzizi.acolyte.entity.mobs.wizards.demon;
 
+import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.AbstractSpellCastingMob;
 import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.NeutralWizard;
@@ -39,6 +40,8 @@ import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeUtils;
 import net.raptorzizi.acolyte.entity.mobs.lieutenant.LieutenantEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanEntity;
 import net.raptorzizi.acolyte.registries.ModItemsRegistry;
+import io.redspace.ironsspellbooks.api.spells.CastType;
+import io.redspace.ironsspellbooks.api.util.AnimationHolder;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -46,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import static net.raptorzizi.acolyte.util.ModUtils.resolveAnimFile;
 import static net.raptorzizi.acolyte.util.ModUtils.resolveBiomeFolder;
 
 public abstract class DemonEntity extends AbstractSpellCastingMob implements Enemy {
@@ -55,6 +59,9 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
     private static final EntityDataAccessor<String> BIOME_FOLDER = SynchedEntityData.defineId(DemonEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> SKIN_VARIANT = SynchedEntityData.defineId(DemonEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> CUSTOM_SKIN = SynchedEntityData.defineId(DemonEntity.class, EntityDataSerializers.STRING);
+    public ResourceLocation currentAnimFile = AbstractSpellCastingMob.animationInstantCast;
+    private AbstractSpell lastInitiatedSpell = null;
+    private int animResetDelay = 0;
     private static final String PREFIX = "demon";
 
     @Nullable
@@ -182,6 +189,32 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
         ArchetypeUtils.applyProfileStats(this, selectedProfile, baseAttributeValues);
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if (animResetDelay > 0 && --animResetDelay == 0) {
+            currentAnimFile = AbstractSpellCastingMob.animationInstantCast;
+        }
+    }
+
+    // Interaction / AI
+    @Override
+    protected PathNavigation createNavigation(Level pLevel) {
+        return new NotIdioticNavigation(this, pLevel);
+    }
+
+    @Override
+    public boolean isAlliedTo(Entity pEntity) {
+        return super.isAlliedTo(pEntity) || pEntity instanceof DemonEntity || pEntity instanceof LieutenantEntity;
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        Entity attacker = pSource.getEntity();
+        if (attacker instanceof DemonEntity || attacker instanceof LieutenantEntity) return false;
+        return super.hurt(pSource, pAmount);
+    }
+
     // Sérialisation
 
     @Override
@@ -218,21 +251,24 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
         );
     }
 
+    // Animation/Texture
     @Override
-    protected PathNavigation createNavigation(Level pLevel) {
-        return new NotIdioticNavigation(this, pLevel);
+    public void initiateCastSpell(AbstractSpell spell, int spellLevel) {
+        currentAnimFile = resolveAnimFile(spell.getCastStartAnimation());
+        lastInitiatedSpell = spell;
+        super.initiateCastSpell(spell, spellLevel);
     }
 
     @Override
-    public boolean isAlliedTo(Entity pEntity) {
-        return super.isAlliedTo(pEntity) || pEntity instanceof DemonEntity || pEntity instanceof LieutenantEntity;
-    }
-
-    @Override
-    public boolean hurt(DamageSource pSource, float pAmount) {
-        Entity attacker = pSource.getEntity();
-        if (attacker instanceof DemonEntity || attacker instanceof LieutenantEntity) return false;
-        return super.hurt(pSource, pAmount);
+    public void castComplete() {
+        if (lastInitiatedSpell != null && lastInitiatedSpell.getCastType() == CastType.LONG) {
+            AnimationHolder finish = lastInitiatedSpell.getCastFinishAnimation();
+            if (!finish.isPass) {
+                currentAnimFile = resolveAnimFile(finish);
+            }
+        }
+        animResetDelay = 20;
+        super.castComplete();
     }
 
     @Override

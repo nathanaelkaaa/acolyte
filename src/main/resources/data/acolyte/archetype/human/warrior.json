@@ -1,7 +1,7 @@
 {
   "profiles": [
     {
-      "weight": 5,
+      "weight": 20,
       "tier": 1,
       "stats": {
         "max_health": 40.0,
@@ -16,7 +16,7 @@
       }
     },
     {
-      "weight": 5,
+      "weight": 20,
       "tier": 1,
       "stats": {
         "max_health": 40.0,
@@ -31,7 +31,7 @@
       }
     },
     {
-      "weight": 3,
+      "weight": 12,
       "tier": 2,
       "stats": {
         "max_health": 60.0,
@@ -47,7 +47,7 @@
       }
     },
     {
-      "weight": 3,
+      "weight": 12,
       "tier": 2,
       "stats": {
         "max_health": 60.0,
@@ -63,7 +63,7 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 4,
       "tier": 3,
       "stats": {
         "max_health": 80.0,
@@ -84,7 +84,7 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 4,
       "tier": 3,
       "stats": {
         "max_health": 80.0,
@@ -105,7 +105,7 @@
       }
     },
     {
-      "weight": 1,
+      "weight": 4,
       "tier": 3,
       "stats": {
         "max_health": 80.0,

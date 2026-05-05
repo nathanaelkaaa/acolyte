@@ -1,7 +1,7 @@
 {
   "profiles": [
     {
-      "weight": 5,
+      "weight": 20,
       "tier": 1,
       "stats": {
         "max_health": 20.0,
@@ -15,7 +15,7 @@
       }
     },
     {
-      "weight": 5,
+      "weight": 20,
       "tier": 1,
       "stats": {
         "max_health": 20.0,
@@ -29,7 +29,7 @@
       }
     },
     {
-      "weight": 3,
+      "weight": 12,
       "tier": 2,
       "stats": {
         "max_health": 35.0,
@@ -44,7 +44,7 @@
       }
     },
     {
-      "weight": 3,
+      "weight": 12,
       "tier": 2,
       "stats": {
         "max_health": 35.0,

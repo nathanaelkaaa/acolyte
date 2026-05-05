@@ -13,4 +13,12 @@ public class HumanModel extends AbstractSpellCastingMobModel {
         }
         return HumanEntity.FALLBACK_TEXTURE;
     }
+
+    @Override
+    public ResourceLocation getAnimationResource(AbstractSpellCastingMob animatable) {
+        if (animatable instanceof HumanEntity human) {
+            return human.currentAnimFile;
+        }
+        return AbstractSpellCastingMob.animationInstantCast;
+    }
 }

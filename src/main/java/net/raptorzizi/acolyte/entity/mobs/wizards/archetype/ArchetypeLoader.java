@@ -32,7 +32,7 @@ public class ArchetypeLoader extends SimplePreparableReloadListener<Map<String, 
                 for (JsonElement el : json.getAsJsonArray("profiles")) {
                     list.add(ArchetypeProfile.fromJson(el.getAsJsonObject()));
                 }
-                result.put(name, list);
+                result.computeIfAbsent(name, k -> new ArrayList<>()).addAll(list);
             } catch (Exception e) {
                 AcolyteMod.LOGGER.error("Failed to load archetype profile: {}", location, e);
             }

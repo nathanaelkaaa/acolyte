@@ -45,11 +45,14 @@ import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeLoader;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeProfile;
 import net.raptorzizi.acolyte.entity.mobs.wizards.archetype.ArchetypeUtils;
 import net.raptorzizi.acolyte.gui.RecruitMenu;
+import io.redspace.ironsspellbooks.api.spells.CastType;
+import io.redspace.ironsspellbooks.api.util.AnimationHolder;
 
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Supplier;
 
+import static net.raptorzizi.acolyte.util.ModUtils.resolveAnimFile;
 import static net.raptorzizi.acolyte.util.ModUtils.resolveBiomeFolder;
 
 public abstract class HumanEntity extends AbstractSpellCastingMob implements IRecruitableCompanion,NeutralMob {
@@ -59,6 +62,9 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
     private static final EntityDataAccessor<String> BIOME_FOLDER = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> SKIN_VARIANT = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<String> CUSTOM_SKIN = SynchedEntityData.defineId(HumanEntity.class, EntityDataSerializers.STRING);
+    public ResourceLocation currentAnimFile = AbstractSpellCastingMob.animationInstantCast;
+    private AbstractSpell lastInitiatedSpell = null;
+    private int animResetDelay = 0;
     private static final String PREFIX = "human";
     private static final int PERSISTENT_ANGER_TIME_MIN = 200;
     private static final int PERSISTENT_ANGER_TIME_MAX = 400;
@@ -262,6 +268,9 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
     public void tick() {
         super.tick();
         tickContract(this.level());
+        if (animResetDelay > 0 && --animResetDelay == 0) {
+            currentAnimFile = AbstractSpellCastingMob.animationInstantCast;
+        }
     }
 
     @Override
@@ -469,9 +478,29 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
         registerGoals();
     }
 
+    // Animation/Texture
     public ResourceLocation getTextureLocation() {
         return ArchetypeUtils.getTextureLocation(
                 this.entityData, CUSTOM_SKIN, BIOME_FOLDER, SKIN_VARIANT, PREFIX, FALLBACK_TEXTURE
         );
+    }
+
+    @Override
+    public void initiateCastSpell(AbstractSpell spell, int spellLevel) {
+        currentAnimFile = resolveAnimFile(spell.getCastStartAnimation());
+        lastInitiatedSpell = spell;
+        super.initiateCastSpell(spell, spellLevel);
+    }
+
+    @Override
+    public void castComplete() {
+        if (lastInitiatedSpell != null && lastInitiatedSpell.getCastType() == CastType.LONG) {
+            AnimationHolder finish = lastInitiatedSpell.getCastFinishAnimation();
+            if (!finish.isPass) {
+                currentAnimFile = resolveAnimFile(finish);
+            }
+        }
+        animResetDelay = 20;
+        super.castComplete();
     }
 }

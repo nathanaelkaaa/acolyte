@@ -1,5 +1,8 @@
 package net.raptorzizi.acolyte.util;
 
+import io.redspace.ironsspellbooks.IronsSpellbooks;
+import io.redspace.ironsspellbooks.api.util.AnimationHolder;
+import io.redspace.ironsspellbooks.entity.mobs.abstract_spell_casting_mob.AbstractSpellCastingMob;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -31,6 +34,13 @@ public class ModUtils {
                 && pLevel.getDifficulty() != Difficulty.PEACEFUL
                 && Monster.isDarkEnoughToSpawn(pLevel, pPos, pRandom)
                 && Monster.checkMobSpawnRules(ModEntityRegistry.DEMON_ARCHER.get(), pLevel, pSpawnType, pPos, pRandom);
+    }
+
+    public static ResourceLocation resolveAnimFile(AnimationHolder holder) {
+        return holder.getForPlayer()
+                .filter(rl -> !rl.getNamespace().equals(IronsSpellbooks.MODID))
+                .map(rl -> ResourceLocation.fromNamespaceAndPath(rl.getNamespace(), "animations/" + rl.getPath() + ".json"))
+                .orElse(AbstractSpellCastingMob.animationInstantCast);
     }
 
     public static String resolveBiomeFolder(ServerLevelAccessor level, BlockPos pos) {
