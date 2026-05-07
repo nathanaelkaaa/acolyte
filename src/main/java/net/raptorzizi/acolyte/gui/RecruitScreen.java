@@ -25,7 +25,7 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
             ResourceLocation.fromNamespaceAndPath(AcolyteMod.MOD_ID,
                     "textures/gui/recruit_screen.png");
 
-    private static final int GUI_W = 176;
+    private static final int GUI_W = 200;
     private static final int GUI_H = 217;
     private static final int GUI_H_TOTAL = 335;
 
@@ -63,27 +63,27 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
             Button recruitButton = new TexturedButton(
                     this.leftPos + 7, this.topPos + 92, 161, 16,
                     Component.translatable("gui.acolyte.recruit.contract_cost"),
-                    btn -> onRecruitClicked(), 0, 233, 0, 249, 161, 16, 176, 335
+                    btn -> onRecruitClicked(), 0, 233, 0, 249, 161, 16, 200, 335
             );
             this.addRenderableWidget(recruitButton);
         } else {
             Button followButton = new TexturedButton(
                     this.leftPos + 7, this.topPos + 92, 48, 16,
                     Component.translatable("gui.acolyte.recruit.follow"),
-                    btn -> onOrderClicked(false), 0, 217, 48, 217, 48, 16, 176, 335);
+                    btn -> onOrderClicked(false), 0, 217, 48, 217, 48, 16, 200, 335);
             this.addRenderableWidget(followButton);
 
             Button stayButton = new TexturedButton(
                     this.leftPos + 62, this.topPos + 92, 48, 16,
                     Component.translatable("gui.acolyte.recruit.stay"),
-                    btn -> onOrderClicked(true), 0, 217, 48, 217, 48, 16, 176, 335
+                    btn -> onOrderClicked(true), 0, 217, 48, 217, 48, 16, 200, 335
             );
             this.addRenderableWidget(stayButton);
 
             Button unrecruitButton = new TexturedButton(
                     this.leftPos + 117, this.topPos + 92, 48, 16,
                     Component.translatable("gui.acolyte.recruit.unrecruit"),
-                    btn -> onUnrecruitClicked(), 0, 217, 48, 217, 48, 16, 176, 335
+                    btn -> onUnrecruitClicked(), 0, 217, 48, 217, 48, 16, 200, 335
             );
             this.addRenderableWidget(unrecruitButton);
         }
@@ -141,7 +141,7 @@ public class RecruitScreen extends AbstractContainerScreen<RecruitMenu> {
 
 
     private void renderTierFrame(GuiGraphics guiGraphics, int x, int y) {
-        int tier = Math.max(1, Math.min(3, menu.tier));
+        int tier = Math.max(1, Math.min(4, menu.tier));
         int texU = (tier - 1) * FRAME_W;
         int frameX = x + PORTRAIT_X + (PORTRAIT_W - FRAME_W) / 2;
         int frameY = y + PORTRAIT_Y + (PORTRAIT_H - FRAME_H) / 2;

@@ -3,10 +3,16 @@ package net.raptorzizi.acolyte.entity.mobs.wizards.archetype;
 import com.google.gson.*;
 import io.redspace.ironsspellbooks.api.spells.AbstractSpell;
 import io.redspace.ironsspellbooks.api.registry.SpellRegistry;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.core.BlockPos;
 import net.raptorzizi.acolyte.AcolyteMod;
 
 import javax.annotation.Nullable;
@@ -40,6 +46,7 @@ public class ArchetypeProfile {
     public final List<AbstractSpell> defenseSpells;
     public final List<AbstractSpell> mobilitySpells;
     public final List<AbstractSpell> utilitySpells;
+    @Nullable public final List<String> allowedBiomes;
 
     private ArchetypeProfile(
             int weight,
@@ -58,7 +65,8 @@ public class ArchetypeProfile {
             @Nullable Item legs, @Nullable Item feet,
             @Nullable AbstractSpell barrageSpell, @Nullable AbstractSpell singleUseSpell,
             List<AbstractSpell> attack, List<AbstractSpell> defense,
-            List<AbstractSpell> mobility, List<AbstractSpell> utility) {
+            List<AbstractSpell> mobility, List<AbstractSpell> utility,
+            @Nullable List<String> allowedBiomes) {
         this.weight = weight;
         this.tier = tier;
         this.customName = customName;
@@ -82,6 +90,7 @@ public class ArchetypeProfile {
         this.defenseSpells = defense;
         this.mobilitySpells = mobility;
         this.utilitySpells = utility;
+        this.allowedBiomes = allowedBiomes;
     }
 
     public static ArchetypeProfile fromJson(JsonObject json) {
@@ -125,6 +134,15 @@ public class ArchetypeProfile {
             if (statOverrides.isEmpty()) statOverrides = null;
         }
 
+        List<String> allowedBiomes = null;
+        if (json.has("biomes")) {
+            allowedBiomes = new ArrayList<>();
+            for (JsonElement el : json.getAsJsonArray("biomes")) {
+                allowedBiomes.add(el.getAsString());
+            }
+            if (allowedBiomes.isEmpty()) allowedBiomes = null;
+        }
+
         JsonObject eq = json.has("equipment") ? json.getAsJsonObject("equipment") : new JsonObject();
         JsonObject spellsObj = json.has("spells") ? json.getAsJsonObject("spells") : json;
 
@@ -151,7 +169,8 @@ public class ArchetypeProfile {
                 parseSpellList(spellsObj, "attack_spells"),
                 parseSpellList(spellsObj, "defense_spells"),
                 parseSpellList(spellsObj, "mobility_spells"),
-                parseSpellList(spellsObj, "utility_spells")
+                parseSpellList(spellsObj, "utility_spells"),
+                allowedBiomes
         );
         profile.profileId = profileId;
         return profile;
@@ -187,5 +206,19 @@ public class ArchetypeProfile {
 
     public boolean hasStatOverride(String key) {
         return statOverrides != null && statOverrides.containsKey(key);
+    }
+
+    public boolean matchesBiome(ServerLevelAccessor level, BlockPos pos) {
+        if (allowedBiomes == null) return true;
+        Holder<Biome> biome = level.getBiome(pos);
+        for (String entry : allowedBiomes) {
+            if (entry.startsWith("#")) {
+                TagKey<Biome> tag = TagKey.create(Registries.BIOME, ResourceLocation.parse(entry.substring(1)));
+                if (biome.is(tag)) return true;
+            } else {
+                if (biome.is(ResourceLocation.parse(entry))) return true;
+            }
+        }
+        return false;
     }
 }

@@ -2,9 +2,10 @@
   "profiles": [
     {
       "weight": 2, // probability to spawn
-      "tier": 3, // tier meaning rarety/power of the character, change the frame on recruit screen (tier 1-2-3)
+      "tier": 3, // tier meaning rarety/power of the character, change the frame on recruit screen (tier 1-2-3-4)
       "name": "Exemple", // name of the character, visible in recruit screen
       "skin": "acolyte:textures/entity/exemple.png", // if no skin spawn with classic character skin
+      "biomes": ["#minecraft:is_forest", "minecraft:dark_forest"], //biomes filter
       "equipment": { // can be empty
         "mainhand": "minecraft:air", // for a mod : "mod_name:item_name"
         "head": "minecraft:iron_helmet",

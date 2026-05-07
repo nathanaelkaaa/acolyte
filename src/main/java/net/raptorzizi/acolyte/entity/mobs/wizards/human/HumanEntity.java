@@ -148,7 +148,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
         RandomSource random = Utils.random;
         this.setSkinVariant(random.nextInt(getSkinCount()));
         this.selectedProfile = ArchetypeLoader.INSTANCE.rollProfile(
-                getArchetypeName(), new Random(random.nextLong())
+                getArchetypeName(), new Random(random.nextLong()), pLevel, this.blockPosition()
         );
         applyProfileStats();
         this.xpReward = selectedProfile != null ? selectedProfile.xpReward : 15;
@@ -224,6 +224,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
         return switch (selectedProfile.tier) {
             case 2 -> 7;
             case 3 -> 9;
+            case 4 -> 11;
             default -> 5;
         };
     }
@@ -235,6 +236,7 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
         return switch (selectedProfile.tier) {
             case 2 -> 48000L; // 2 days
             case 3 -> 72000L; // 3 days
+            case 4 -> 96000L; // 4 days
             default -> 24000L; // 1 days
         };
     }

@@ -134,7 +134,7 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
         RandomSource random = Utils.random;
         this.setSkinVariant(random.nextInt(getSkinCount()));
         this.selectedProfile = ArchetypeLoader.INSTANCE.rollProfile(
-                getArchetypeName(), new Random(random.nextLong())
+                getArchetypeName(), new Random(random.nextLong()), pLevel, this.blockPosition()
         );
         applyProfileStats();
         this.xpReward = selectedProfile != null ? selectedProfile.xpReward : 15;

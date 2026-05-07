@@ -8,6 +8,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.raptorzizi.acolyte.AcolyteMod;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ServerLevelAccessor;
+
 import java.io.*;
 import java.util.*;
 
@@ -63,9 +66,27 @@ public class ArchetypeLoader extends SimplePreparableReloadListener<Map<String, 
     }
 
     public ArchetypeProfile rollProfile(String archetypeName, Random random) {
-        List<ArchetypeProfile> list = profiles.getOrDefault(archetypeName, List.of());
-        if (list.isEmpty()) return null;
+        return rollWeighted(profiles.getOrDefault(archetypeName, List.of()), random);
+    }
 
+    public ArchetypeProfile rollProfile(String archetypeName, Random random, ServerLevelAccessor level, BlockPos pos) {
+        List<ArchetypeProfile> all = profiles.getOrDefault(archetypeName, List.of());
+
+        List<ArchetypeProfile> matching = all.stream()
+                .filter(p -> p.matchesBiome(level, pos))
+                .toList();
+
+        if (!matching.isEmpty()) return rollWeighted(matching, random);
+
+        List<ArchetypeProfile> unrestricted = all.stream()
+                .filter(p -> p.allowedBiomes == null)
+                .toList();
+
+        return rollWeighted(unrestricted, random);
+    }
+
+    private ArchetypeProfile rollWeighted(List<ArchetypeProfile> list, Random random) {
+        if (list.isEmpty()) return null;
         int totalWeight = list.stream().mapToInt(p -> p.weight).sum();
         int roll = random.nextInt(totalWeight);
         int cumulative = 0;
