@@ -93,7 +93,8 @@
         "utility_spells": []
       },
       "equipment": {
-        "mainhand": "irons_spellbooks:iron_spell_book"
+        "mainhand": "irons_spellbooks:iron_spell_book",
+        "chest": "acolyte:wizard_tier2_chestplate"
       }
     },
     {
@@ -113,7 +114,8 @@
         "utility_spells": []
       },
       "equipment": {
-        "mainhand": "irons_spellbooks:iron_spell_book"
+        "mainhand": "irons_spellbooks:iron_spell_book",
+        "chest": "acolyte:wizard_tier2_chestplate"
       }
     },
     {
@@ -133,7 +135,8 @@
         "utility_spells": []
       },
       "equipment": {
-        "mainhand": "irons_spellbooks:iron_spell_book"
+        "mainhand": "irons_spellbooks:iron_spell_book",
+        "chest": "acolyte:wizard_tier2_chestplate"
       }
     },
     {
@@ -153,7 +156,8 @@
         "utility_spells": []
       },
       "equipment": {
-        "mainhand": "irons_spellbooks:iron_spell_book"
+        "mainhand": "irons_spellbooks:iron_spell_book",
+        "chest": "acolyte:wizard_tier2_chestplate"
       }
     }
   ]

@@ -8,12 +8,12 @@ import net.raptorzizi.acolyte.entity.armor.CosmeticModel;
 import net.raptorzizi.acolyte.registries.ModArmorMaterialRegistry;
 import software.bernie.geckolib.renderer.GeoArmorRenderer;
 
-public class BlackWizardArmorItem extends ExtendedArmorItem {
+public class WarriorArmorItem extends ExtendedArmorItem {
 
     private final String modelName;
     private final String textureName;
 
-    public BlackWizardArmorItem(Type slot, Properties settings, String modelName, String textureName) {
+    public WarriorArmorItem(Type slot, Properties settings, String modelName, String textureName) {
         super(ModArmorMaterialRegistry.COSMETIC, slot, settings);
 
         this.modelName = modelName;

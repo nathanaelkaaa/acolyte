@@ -200,7 +200,9 @@ public abstract class DemonEntity extends AbstractSpellCastingMob implements Ene
     // Interaction / AI
     @Override
     protected PathNavigation createNavigation(Level pLevel) {
-        return new NotIdioticNavigation(this, pLevel);
+        NotIdioticNavigation nav = new NotIdioticNavigation(this, pLevel);
+        nav.setCanOpenDoors(true);
+        return nav;
     }
 
     @Override

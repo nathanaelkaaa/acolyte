@@ -11,7 +11,7 @@
       },
       "equipment": {
         "mainhand": "minecraft:bow",
-        "chest": "acolyte:leather_quiver"
+        "chest": "acolyte:archer_tier1_chestplate"
       }
     },
     {
@@ -25,7 +25,7 @@
       },
       "equipment": {
         "mainhand": "minecraft:crossbow",
-        "chest": "acolyte:leather_quiver"
+        "chest": "acolyte:archer_tier1_chestplate"
       }
     },
     {
@@ -39,8 +39,7 @@
       },
       "equipment": {
         "mainhand": "minecraft:bow",
-        "head": "acolyte:archer_helmet",
-        "chest": "acolyte:iron_quiver"
+        "chest": "acolyte:archer_tier2_chestplate"
       }
     },
     {
@@ -54,8 +53,7 @@
       },
       "equipment": {
         "mainhand": "minecraft:crossbow",
-        "head": "acolyte:archer_helmet",
-        "chest": "acolyte:iron_quiver"
+        "chest": "acolyte:archer_tier2_chestplate"
       }
     }
   ]

@@ -16,7 +16,8 @@
         "utility_spells": []
       },
       "equipment": {
-        "mainhand": "irons_spellbooks:copper_spell_book"
+        "mainhand": "irons_spellbooks:copper_spell_book",
+        "head": "acolyte:wizard_tier1_helmet"
       }
     },
     {
@@ -35,7 +36,8 @@
         "utility_spells": []
       },
       "equipment": {
-        "mainhand": "irons_spellbooks:copper_spell_book"
+        "mainhand": "irons_spellbooks:copper_spell_book",
+        "head": "acolyte:wizard_tier1_helmet"
       }
     },
     {
@@ -54,7 +56,8 @@
         "utility_spells": []
       },
       "equipment": {
-        "mainhand": "irons_spellbooks:copper_spell_book"
+        "mainhand": "irons_spellbooks:copper_spell_book",
+        "head": "acolyte:wizard_tier1_helmet"
       }
     },
     {
@@ -73,7 +76,8 @@
         "utility_spells": []
       },
       "equipment": {
-        "mainhand": "irons_spellbooks:copper_spell_book"
+        "mainhand": "irons_spellbooks:copper_spell_book",
+        "head": "acolyte:wizard_tier1_helmet"
       }
     },
     {
@@ -94,7 +98,8 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:iron_spell_book",
-        "head": "acolyte:black_wizard_helmet"
+        "head": "acolyte:wizard_tier2_helmet",
+        "chest": "acolyte:wizard_tier2_chestplate"
       }
     },
     {
@@ -115,7 +120,8 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:iron_spell_book",
-        "chest": "acolyte:black_wizard_chestplate"
+        "head": "acolyte:wizard_tier2_helmet",
+        "chest": "acolyte:wizard_tier2_chestplate"
       }
     },
     {
@@ -136,7 +142,8 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:iron_spell_book",
-        "head": "acolyte:black_wizard_helmet"
+        "head": "acolyte:wizard_tier2_helmet",
+        "chest": "acolyte:wizard_tier2_chestplate"
       }
     },
     {
@@ -157,7 +164,8 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:iron_spell_book",
-        "chest": "acolyte:black_wizard_chestplate"
+        "head": "acolyte:wizard_tier2_helmet",
+        "chest": "acolyte:wizard_tier2_chestplate"
       }
     },
     {
@@ -178,10 +186,8 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:gold_spell_book",
-        "head": "irons_spellbooks:shadowwalker_helmet",
-        "chest": "acolyte:black_wizard_chestplate",
-        "legs": "acolyte:black_wizard_leggings",
-        "feet": "acolyte:black_wizard_boots"
+        "head": "acolyte:wizard_tier3_helmet",
+        "chest": "acolyte:wizard_tier3_chestplate"
       }
     },
     {
@@ -203,10 +209,8 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:gold_spell_book",
-        "head": "acolyte:black_wizard_helmet",
-        "chest": "irons_spellbooks:archevoker_chestplate",
-        "legs": "acolyte:black_wizard_leggings",
-        "feet": "acolyte:black_wizard_boots"
+        "head": "acolyte:wizard_tier3_helmet",
+        "chest": "acolyte:wizard_tier3_chestplate"
       }
     },
     {
@@ -228,10 +232,8 @@
       },
       "equipment": {
         "mainhand": "irons_spellbooks:gold_spell_book",
-        "head": "irons_spellbooks:cultist_helmet",
-        "chest": "acolyte:black_wizard_chestplate",
-        "legs": "acolyte:black_wizard_leggings",
-        "feet": "acolyte:black_wizard_boots"
+        "head": "acolyte:wizard_tier3_helmet",
+        "chest": "acolyte:wizard_tier3_chestplate"
       }
     }
   ]

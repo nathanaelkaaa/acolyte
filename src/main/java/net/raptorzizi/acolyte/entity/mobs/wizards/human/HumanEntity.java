@@ -289,7 +289,9 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
 
     @Override
     protected PathNavigation createNavigation(Level pLevel) {
-        return new NotIdioticNavigation(this, pLevel);
+        NotIdioticNavigation nav = new NotIdioticNavigation(this, pLevel);
+        nav.setCanOpenDoors(true);
+        return nav;
     }
 
     @Override

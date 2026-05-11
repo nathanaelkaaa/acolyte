@@ -35,7 +35,7 @@
       },
       "equipment": {
         "mainhand": "minecraft:golden_sword",
-        "chest": "minecraft:chainmail_chestplate"
+        "chest": "acolyte:warrior_tier2_chestplate"
       }
     },
     {
@@ -49,7 +49,7 @@
       },
       "equipment": {
         "mainhand": "minecraft:golden_axe",
-        "chest": "minecraft:chainmail_chestplate"
+        "chest": "acolyte:warrior_tier2_chestplate"
       }
     }
   ]

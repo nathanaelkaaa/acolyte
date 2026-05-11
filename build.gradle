@@ -150,8 +150,8 @@ dependencies {
 
     // IRONS SPELLBOOKS ********************************************************************************************
     implementation "curse.maven:irons-spells-n-spellbooks-${irons_spells_project_id}:${irons_spells_file_id}"
-    //implementation "curse.maven:mmmmmmmmmmmm-225738:7206981"
-    //implementation "curse.maven:selene-499980:7695522"
+    implementation "curse.maven:mmmmmmmmmmmm-225738:7206981"
+    implementation "curse.maven:selene-499980:7695522"
     //implementation "curse.maven:health-bars-1367734:7122333"
     //implementation "curse.maven:puzzles-lib-495476:7140307"
     // Example optional mod dependency with JEI

@@ -41,9 +41,13 @@ public class ModCommonSetup {
 
     @SubscribeEvent
     public static void spawnPlacements(RegisterSpawnPlacementsEvent event) {
-        event.register(ModEntityRegistry.DEMON_MAGE.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (type, serverLevelAccessor, spawnType, blockPos, random) -> ModUtils.checkDemonMageSpawnRules(serverLevelAccessor, spawnType, blockPos, random), RegisterSpawnPlacementsEvent.Operation.OR);
-        event.register(ModEntityRegistry.DEMON_WARRIOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (type, serverLevelAccessor, spawnType, blockPos, random) -> ModUtils.checkDemonWarriorSpawnRules(serverLevelAccessor, spawnType, blockPos, random), RegisterSpawnPlacementsEvent.Operation.OR);
-        event.register(ModEntityRegistry.DEMON_ARCHER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, (type, serverLevelAccessor, spawnType, blockPos, random) -> ModUtils.checkDemonArcherSpawnRules(serverLevelAccessor, spawnType, blockPos, random), RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(ModEntityRegistry.DEMON_MAGE.get(),    SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkDemonSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(ModEntityRegistry.DEMON_WARRIOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkDemonSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(ModEntityRegistry.DEMON_ARCHER.get(),  SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkDemonSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+
+        event.register(ModEntityRegistry.HUMAN_MAGE.get(),    SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkHumanSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(ModEntityRegistry.HUMAN_WARRIOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkHumanSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+        event.register(ModEntityRegistry.HUMAN_ARCHER.get(),  SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkHumanSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
     }
 
     @SubscribeEvent

@@ -12,9 +12,10 @@ import net.raptorzizi.acolyte.registries.ModBlockEntityRegistry;
 
 public class TavernSpawnMarkerBlockEntity extends BlockEntity {
 
-    private static final int DETECTION_RADIUS = 20;
+    private static final int DETECTION_RADIUS = 50;
     private static final int SPAWN_RADIUS = 5;
-    private static final int CHECK_INTERVAL = 400;
+    private static final int CHECK_INTERVAL = 100;
+    private static final int MAX_ENTITIES = 4;
 
     public TavernSpawnMarkerBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntityRegistry.TAVERN_SPAWN_MARKER_BE.get(), pos, state);
@@ -35,14 +36,12 @@ public class TavernSpawnMarkerBlockEntity extends BlockEntity {
                 new AABB(pos).inflate(DETECTION_RADIUS)
         ).size();
 
-        int minCount = 1 + serverLevel.random.nextInt(2);
+        if (count >= MAX_ENTITIES) return;
 
-        if (count < minCount) {
-            BlockPos spawnPos = findValidSpawnPos(serverLevel, pos);
-            if (spawnPos == null) return;
+        BlockPos spawnPos = findValidSpawnPos(serverLevel, pos);
+        if (spawnPos == null) return;
 
-            HumanSpawner.spawnRandom(serverLevel, spawnPos);
-        }
+        HumanSpawner.spawnRandom(serverLevel, spawnPos);
     }
 
     private static BlockPos findValidSpawnPos(ServerLevel level, BlockPos center) {

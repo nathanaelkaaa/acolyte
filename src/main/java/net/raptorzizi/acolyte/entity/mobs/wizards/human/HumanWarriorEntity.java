@@ -140,8 +140,11 @@ public class HumanWarriorEntity extends HumanEntity implements IAnimatedAttacker
                 || super.isAnimating();
     }
 
+    @Override
     protected PathNavigation createNavigation(Level pLevel) {
-        return new NotIdioticNavigation(this, pLevel);
+        NotIdioticNavigation nav = new NotIdioticNavigation(this, pLevel);
+        nav.setCanOpenDoors(true);
+        return nav;
     }
 
     // Sons

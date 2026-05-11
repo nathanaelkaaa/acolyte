@@ -11,29 +11,22 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.neoforged.neoforge.common.Tags;
-import net.raptorzizi.acolyte.registries.ModEntityRegistry;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
 
 public class ModUtils {
 
-    public static boolean checkDemonMageSpawnRules(ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+    public static <T extends Mob> boolean checkDemonSpawnRules(EntityType<T> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         return !pLevel.getBiome(pPos).is(Tags.Biomes.NO_DEFAULT_MONSTERS)
                 && pLevel.getDifficulty() != Difficulty.PEACEFUL
                 && Monster.isDarkEnoughToSpawn(pLevel, pPos, pRandom)
-                && Monster.checkMobSpawnRules(ModEntityRegistry.DEMON_MAGE.get(), pLevel, pSpawnType, pPos, pRandom);
+                && Monster.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom);
     }
 
-    public static boolean checkDemonWarriorSpawnRules(ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
+    public static <T extends Mob> boolean checkHumanSpawnRules(EntityType<T> type, ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
         return !pLevel.getBiome(pPos).is(Tags.Biomes.NO_DEFAULT_MONSTERS)
                 && pLevel.getDifficulty() != Difficulty.PEACEFUL
-                && Monster.isDarkEnoughToSpawn(pLevel, pPos, pRandom)
-                && Monster.checkMobSpawnRules(ModEntityRegistry.DEMON_WARRIOR.get(), pLevel, pSpawnType, pPos, pRandom);
-    }
-
-    public static boolean checkDemonArcherSpawnRules(ServerLevelAccessor pLevel, MobSpawnType pSpawnType, BlockPos pPos, RandomSource pRandom) {
-        return !pLevel.getBiome(pPos).is(Tags.Biomes.NO_DEFAULT_MONSTERS)
-                && pLevel.getDifficulty() != Difficulty.PEACEFUL
-                && Monster.isDarkEnoughToSpawn(pLevel, pPos, pRandom)
-                && Monster.checkMobSpawnRules(ModEntityRegistry.DEMON_ARCHER.get(), pLevel, pSpawnType, pPos, pRandom);
+                && Mob.checkMobSpawnRules(type, pLevel, pSpawnType, pPos, pRandom);
     }
 
     public static ResourceLocation resolveAnimFile(AnimationHolder holder) {
