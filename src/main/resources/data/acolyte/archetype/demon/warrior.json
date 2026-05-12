@@ -4,8 +4,8 @@
       "weight": 20,
       "tier": 1,
       "stats": {
-        "max_health": 40.0,
-        "armor": 0.0,
+        "max_health": 35.0,
+        "armor": 3.0,
         "attack_interval": 25
       },
       "equipment": {
@@ -16,8 +16,8 @@
       "weight": 20,
       "tier": 1,
       "stats": {
-        "max_health": 30.0,
-        "armor": 0.0,
+        "max_health": 35.0,
+        "armor": 3.0,
         "attack_interval": 50
       },
       "equipment": {
@@ -28,8 +28,8 @@
       "weight": 12,
       "tier": 2,
       "stats": {
-        "max_health": 60.0,
-        "armor": 0.0,
+        "max_health": 50.0,
+        "armor": 6.0,
         "attack_interval": 20,
         "attack_damage": 1.5
       },
@@ -42,14 +42,68 @@
       "weight": 12,
       "tier": 2,
       "stats": {
-        "max_health": 60.0,
-        "armor": 0.0,
+        "max_health": 50.0,
+        "armor": 6.0,
         "attack_interval": 40,
         "attack_damage": 1.5
       },
       "equipment": {
         "mainhand": "minecraft:golden_axe",
         "chest": "acolyte:warrior_tier2_chestplate"
+      }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 65.0,
+        "armor": 9.0,
+        "attack_interval": 20,
+        "barrage_attack_interval": 30,
+        "attack_damage": 3.0
+      },
+      "equipment": {
+        "mainhand": "minecraft:golden_sword",
+        "chest": "acolyte:warrior_tier3_chestplate"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:flaming_strike"
+      }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 65.0,
+        "armor": 9.0,
+        "attack_interval": 20,
+        "barrage_attack_interval": 30,
+        "attack_damage": 3.0
+      },
+      "equipment": {
+        "mainhand": "minecraft:golden_sword",
+        "chest": "acolyte:warrior_tier3_chestplate"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:throw"
+      }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 65.0,
+        "armor": 9.0,
+        "attack_interval": 40,
+        "barrage_attack_interval": 50,
+        "attack_damage": 3.0
+      },
+      "equipment": {
+        "mainhand": "minecraft:golden_axe",
+        "chest": "acolyte:warrior_tier3_chestplate"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:frost_step"
       }
     }
   ]

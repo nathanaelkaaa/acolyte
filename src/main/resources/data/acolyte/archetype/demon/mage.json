@@ -159,6 +159,63 @@
         "mainhand": "irons_spellbooks:iron_spell_book",
         "chest": "acolyte:wizard_tier2_chestplate"
       }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 40.0,
+        "armor": 4.0,
+        "attack_interval": 30,
+        "spells_quality": 0.4
+      },
+      "spells": {
+        "single_use_spell": "irons_spellbooks:summon_swords",
+        "attack_spells": ["irons_spellbooks:wither_skull"],
+        "mobility_spells": ["irons_spellbooks:teleport"]
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:gold_spell_book",
+        "chest": "acolyte:wizard_tier3_chestplate"
+      }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 40.0,
+        "armor": 4.0,
+        "attack_interval": 30,
+        "spells_quality": 0.4
+      },
+      "spells": {
+        "single_use_spell": "irons_spellbooks:summon_vex",
+        "barrage_spell": "irons_spellbooks:arrow_volley",
+        "attack_spells": ["irons_spellbooks:guiding_bolt"]
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:gold_spell_book",
+        "chest": "acolyte:wizard_tier3_chestplate"
+      }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 40.0,
+        "armor": 4.0,
+        "attack_interval": 30,
+        "spells_quality": 0.4
+      },
+      "spells": {
+        "single_use_spell": "irons_spellbooks:raise_dead",
+        "barrage_spell": "irons_spellbooks:blood_slash",
+        "attack_spells": ["irons_spellbooks:acupuncture"]
+      },
+      "equipment": {
+        "mainhand": "irons_spellbooks:gold_spell_book",
+        "chest": "acolyte:wizard_tier3_chestplate"
+      }
     }
   ]
 }

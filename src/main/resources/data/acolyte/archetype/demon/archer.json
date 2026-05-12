@@ -55,6 +55,60 @@
         "mainhand": "minecraft:crossbow",
         "chest": "acolyte:archer_tier2_chestplate"
       }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 50.0,
+        "attack_damage": 10.0,
+        "armor": 4.0,
+        "attack_interval": 5,
+        "spells_quality": 0.2
+      },
+      "equipment": {
+        "mainhand": "minecraft:bow",
+        "chest": "acolyte:archer_tier3_chestplate"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:fire_arrow"
+      }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 50.0,
+        "attack_damage": 10.0,
+        "armor": 4.0,
+        "attack_interval": 5,
+        "spells_quality": 0.2
+      },
+      "equipment": {
+        "mainhand": "minecraft:bow",
+        "chest": "acolyte:archer_tier3_chestplate"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:magic_arrow"
+      }
+    },
+    {
+      "weight": 4,
+      "tier": 3,
+      "stats": {
+        "max_health": 50.0,
+        "attack_damage": 10.0,
+        "armor": 4.0,
+        "attack_interval": 5,
+        "spells_quality": 0.2
+      },
+      "equipment": {
+        "mainhand": "minecraft:crossbow",
+        "chest": "acolyte:archer_tier3_chestplate"
+      },
+      "spells": {
+        "barrage_spell": "irons_spellbooks:poison_arrow"
+      }
     }
   ]
 }
