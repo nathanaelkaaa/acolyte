@@ -31,8 +31,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.*;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -297,6 +299,8 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
     @Override
     public boolean isAlliedTo(Entity entity) {
         if (super.isAlliedTo(entity)) return true;
+        if (entity instanceof AbstractVillager) return true;
+        if (entity instanceof IronGolem) return true;
         if (!this.isRecruited()) return false;
         if (entity instanceof Player player && this.ownerUUID != null
                 && this.ownerUUID.equals(player.getUUID())) return true;
@@ -314,6 +318,10 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
         if (direct instanceof HumanEntity) return false;
         if (indirect instanceof PriestEntity) return false;
         if (direct instanceof PriestEntity) return false;
+        if (indirect instanceof IronGolem) return false;
+        if (direct instanceof IronGolem) return false;
+        if (indirect instanceof AbstractVillager) return false;
+        if (direct instanceof AbstractVillager) return false;
 
         if (indirect != null && isAlliedTo(indirect)) return false;
         if (direct != null && direct != indirect && isAlliedTo(direct)) return false;
@@ -324,6 +332,8 @@ public abstract class HumanEntity extends AbstractSpellCastingMob implements IRe
     public void setTarget(@Nullable LivingEntity target) {
         if (target instanceof HumanEntity) return;
         if (target instanceof PriestEntity) return;
+        if (target instanceof AbstractVillager) return;
+        if (target instanceof IronGolem) return;
         if (target != null && isAlliedTo(target)) return;
         super.setTarget(target);
     }

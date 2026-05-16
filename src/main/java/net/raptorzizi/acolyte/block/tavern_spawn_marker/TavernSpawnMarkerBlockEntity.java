@@ -9,6 +9,7 @@ import net.minecraft.world.phys.AABB;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanMageEntity;
 import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanSpawner;
 import net.raptorzizi.acolyte.registries.ModBlockEntityRegistry;
+import net.raptorzizi.acolyte.setup.ModGameRules;
 
 public class TavernSpawnMarkerBlockEntity extends BlockEntity {
 
@@ -29,6 +30,7 @@ public class TavernSpawnMarkerBlockEntity extends BlockEntity {
 
         ServerLevel serverLevel = (ServerLevel) level;
 
+        if (!serverLevel.getGameRules().getBoolean(ModGameRules.ALLOW_HUMAN_STRUCTURE_SPAWNING)) return;
         if (serverLevel.random.nextFloat() > 0.4f) return;
 
         int count = serverLevel.getEntitiesOfClass(

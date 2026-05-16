@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.raptorzizi.acolyte.registries.ModBlockEntityRegistry;
 import net.raptorzizi.acolyte.registries.ModEntityRegistry;
+import net.raptorzizi.acolyte.setup.ModGameRules;
 
 public class DemonSpawnMarkerBlockEntity extends BlockEntity {
 
@@ -26,6 +27,8 @@ public class DemonSpawnMarkerBlockEntity extends BlockEntity {
         if (level.isClientSide || be.hasSpawned) return;
 
         ServerLevel serverLevel = (ServerLevel) level;
+
+        if (!serverLevel.getGameRules().getBoolean(ModGameRules.ALLOW_DEMON_STRUCTURE_SPAWNING)) return;
 
         for (int i = 0; i < be.spawnCount; i++) {
             BlockPos spawnPos = findValidSpawnPos(serverLevel, pos);

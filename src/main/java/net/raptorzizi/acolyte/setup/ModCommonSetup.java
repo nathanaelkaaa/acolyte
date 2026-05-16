@@ -2,13 +2,17 @@ package net.raptorzizi.acolyte.setup;
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.raptorzizi.acolyte.entity.mobs.wizards.human.HumanEntity;
 import net.raptorzizi.acolyte.AcolyteMod;
 import net.raptorzizi.acolyte.entity.mobs.horn_merchant.HornMerchantEntity;
 import net.raptorzizi.acolyte.entity.mobs.lieutenant.LieutenantEntity;
@@ -48,6 +52,16 @@ public class ModCommonSetup {
         event.register(ModEntityRegistry.HUMAN_MAGE.get(),    SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkHumanSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
         event.register(ModEntityRegistry.HUMAN_WARRIOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkHumanSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
         event.register(ModEntityRegistry.HUMAN_ARCHER.get(),  SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, ModUtils::checkHumanSpawnRules, RegisterSpawnPlacementsEvent.Operation.OR);
+    }
+
+    @SubscribeEvent
+    public static void onLivingChangeTarget(LivingChangeTargetEvent event) {
+        if (event.getNewAboutToBeSetTarget() instanceof HumanEntity) {
+            if (event.getEntity() instanceof IronGolem
+                    || event.getEntity() instanceof AbstractVillager) {
+                event.setCanceled(true);
+            }
+        }
     }
 
     @SubscribeEvent

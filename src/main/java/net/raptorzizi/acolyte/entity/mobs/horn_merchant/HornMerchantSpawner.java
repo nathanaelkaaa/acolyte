@@ -8,6 +8,7 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.CustomSpawner;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.raptorzizi.acolyte.registries.ModEntityRegistry;
+import net.raptorzizi.acolyte.setup.ModGameRules;
 
 public class HornMerchantSpawner implements CustomSpawner {
     private int tickDelay = 24000;
@@ -19,6 +20,7 @@ public class HornMerchantSpawner implements CustomSpawner {
         }
 
         this.tickDelay = 24000 + level.random.nextInt(12000);
+        if (!level.getGameRules().getBoolean(ModGameRules.ALLOW_HORN_MERCHANT_SPAWNING)) return 0;
         if (level.random.nextInt(100) > 15) {
             return 0;
         }
